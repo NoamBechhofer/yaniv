@@ -14,7 +14,6 @@ public class Deck {
             throw new RuntimeException("Asserts must be enabled!!!");
     }
 
-    // todo arraystack
     Stack<Card> cards;
 
     /**

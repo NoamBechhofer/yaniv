@@ -8,10 +8,6 @@ import java.util.Stack;
 
 public class Game {
 
-    // todo move these to yaniv utils
-    private static final int NUM_STARTING_CARDS = 5;
-    private static final int MAX_PLAYERS = 8;
-
     // we register players by giving them their starting hand
     private Set<Player> players;
     private Map<Player, Integer> points;
@@ -20,7 +16,7 @@ public class Game {
                                           // previous discard.
 
     public Game() {
-        this.players = new SwitchableHashSet<>();
+        this.players = new LockableHashSet<>();
         this.points = new HashMap<>();
 
         this.deck = new Deck();
@@ -42,14 +38,14 @@ public class Game {
     public Set<Card> initializePlayer(Player p) throws PlayerRefusalException {
         assert !players.contains(p) : "duplicate player!!";
 
-        if (players.size() >= MAX_PLAYERS)
+        if (players.size() >= YanivUtils.MAX_PLAYERS)
             throw new PlayerRefusalException("too many players");
 
         this.players.add(p);
         this.points.put(p, 0);
 
         Set<Card> hand = new HashSet<>();
-        for (int i = 0; i < NUM_STARTING_CARDS; i++) {
+        for (int i = 0; i < YanivUtils.NUM_STARTING_CARDS; i++) {
             Card tmp = this.deck.removeTopCard();
             boolean added = hand.add(tmp);
             assert added : tmp;

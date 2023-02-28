@@ -11,6 +11,9 @@ public class YanivUtils {
     // todo: change to relative path and make platform-independent ("/" vs "\\")
     public static final String RESOURCES_PATH = "C:\\Users\\noamb\\OneDrive\\Programming\\yanivMaven\\yaniv\\src\\main\\resources\\";
 
+    public static final int NUM_STARTING_CARDS = 5;
+    public static final int MAX_PLAYERS = 8;
+
     // todo: replace with shell command based on platform
     public static void clearTerminal() {
         for (int i = 0; i < 100; i++)

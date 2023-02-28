@@ -10,6 +10,7 @@ public class Human implements Player {
 
     /** The game instance to tie this Human to */
     private Game game;
+    /** the hand */
     private Set<Card> hand;
 
     public Human(Game game) throws PlayerRefusalException {
@@ -22,7 +23,11 @@ public class Human implements Player {
      */
     @Override
     public Set<Card> hand() {
-        return this.hand;
+        LockableHashSet<Card> tmp = new LockableHashSet<>(this.hand);
+
+        tmp.lock();
+
+        return tmp;
     }
 
     // todo
@@ -71,10 +76,10 @@ public class Human implements Player {
         sc.close();
     }
 
-    @Override
     /**
      * {@inheritDoc}
      */
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("Your hand:\n");
 

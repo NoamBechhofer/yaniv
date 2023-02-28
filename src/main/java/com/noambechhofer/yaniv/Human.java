@@ -31,7 +31,7 @@ public class Human implements Player {
      */
     @Override
     public void doTurn() {
-        YanivUtils.clearScreen();
+        YanivUtils.clearTerminal();
 
         Set<Card> toDiscard = new HashSet<>();
 
@@ -60,7 +60,7 @@ public class Human implements Player {
             boolean worked = this.hand.remove(choice) && toDiscard.add(choice);
             assert worked : choice;
 
-            YanivUtils.clearScreen();
+            YanivUtils.clearTerminal();
 
             System.out.println();
             System.out.println("Selected: ");

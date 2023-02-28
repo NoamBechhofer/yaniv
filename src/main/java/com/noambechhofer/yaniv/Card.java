@@ -3,6 +3,8 @@ package com.noambechhofer.yaniv;
 import java.io.File;
 import java.io.IOException;
 
+import java.awt.Color;
+
 import org.openimaj.image.ImageUtilities;
 import org.openimaj.image.MBFImage;
 
@@ -10,7 +12,8 @@ import org.openimaj.image.MBFImage;
  * A playing card.
  * 
  * <p>
- * Cards are immutable. Jokers not allowed.
+ * Red Jokers should be instantiated as hearts, black jokers as spades
+ * 
  * <p>
  * Note: this class has a natural ordering that is inconsistent with equals.
  */
@@ -29,6 +32,15 @@ public class Card implements Comparable<Card> {
      */
     private Suit suit;
 
+    /**
+     * Instantiate a Card
+     * 
+     * @param val  a face value selected from the {@link FaceValue} enum.
+     * @param suit a suit selected from the {@link Suit} enum.
+     *             <p>
+     *             Red Jokers should be instantiated as hearts, black jokers as
+     *             spades
+     */
     public Card(FaceValue val, Suit suit) {
         this.val = val;
         this.suit = suit;
@@ -86,6 +98,13 @@ public class Card implements Comparable<Card> {
      */
     @Override
     public String toString() {
+        if (this.isJoker())
+            if (this.suit == Suit.HEARTS)
+                return "Red Joker";
+            else if (this.suit == Suit.SPADES)
+                return "Black Joker";
+            else
+                throw new AssertionError("Invalid Joker encoding");
         return String.format("%s of %s", val, suit);
     }
 
@@ -108,6 +127,7 @@ public class Card implements Comparable<Card> {
 
     /**
      * Returns an image of this Card
+     * Images from https://code.google.com/archive/p/vector-playing-cards/
      * 
      * @return an image of this Card
      */
@@ -126,6 +146,15 @@ public class Card implements Comparable<Card> {
 
         return image;
     }
+
+    /**
+     * Returns true if this Card represents a Joker
+     * 
+     * @return true if this Card represents a Joker
+     */
+    public boolean isJoker() {
+        return this.val() == FaceValue.JOKER;
+    }
 }
 
 /**
@@ -135,8 +164,20 @@ enum Suit {
     CLUBS, DIAMONDS, HEARTS, SPADES;
 
     /**
+     * Returns {@link Color.BLACK} or {@link Color.RED}
+     * 
+     * @return {@link Color.BLACK} or {@link Color.RED}
+     */
+    public Color color() {
+        if (this == CLUBS || this == SPADES)
+            return Color.BLACK;
+        else
+            return Color.RED;
+    }
+
+    /**
      * Returns a numerical representation of this Suit. CLUBS are 1, DIAMONDS are 2,
-     * HEARTS are 3, and SPADES are 4.
+     * HEARTS are 3, and SPADES are 4. Both jokers are 0.
      * 
      * @return a numerical representation of this Suit
      */
@@ -160,9 +201,8 @@ enum Suit {
 
 /** The face value of a Card */
 enum FaceValue {
-    ACE(1), TWO(2), THREE(3), FOUR(4), FIVE(5),
-    SIX(6), SEVEN(7), EIGHT(8), NINE(9), TEN(10),
-    JACK(11), QUEEN(12), KING(13);
+    ACE(1), TWO(2), THREE(3), FOUR(4), FIVE(5), SIX(6), SEVEN(7), EIGHT(8),
+    NINE(9), TEN(10), JACK(11), QUEEN(12), KING(13), JOKER(14);
 
     /**
      * numerical representation of this FaceValue. Useful for determining straights.
@@ -174,8 +214,8 @@ enum FaceValue {
     }
 
     /**
-     * Returns a numerical representation of this FaceValue. ACE is 1, TWO - TEN are
-     * 2 - 10, and JACK - KING are 11 - 13
+     * Returns a numerical representation of this FaceValue. ACE is
+     * 1, TWO - TEN are 2 - 10, and JACK - KING are 11 - 13, JOKER is 14.
      * 
      * @return a numerical representation of this FaceValue
      */

@@ -8,13 +8,16 @@ import java.util.Set;
 
 public class YanivUtils {
 
+    // todo: change to relative path and make platform-independent ("/" vs "\\")
     public static final String RESOURCES_PATH = "C:\\Users\\noamb\\OneDrive\\Programming\\yanivMaven\\yaniv\\src\\main\\resources\\";
 
-    public static void clearScreen() {
+    // todo: replace with shell command based on platform
+    public static void clearTerminal() {
         for (int i = 0; i < 100; i++)
             System.out.println("\n");
     }
 
+    // todo: add test
     /**
      * Verify that the given set is valid under yaniv rules. Always returns false
      * for {@link Set} of size 0.
@@ -34,7 +37,7 @@ public class YanivUtils {
     }
 
     /**
-     * Test whether a {@link set} of {@link Card}s all share the same face value. A
+     * Test whether a {@link Set} of {@link Card}s all share the same face value. A
      * set of size 0 will always return {@code false}, and a set of size 1 will
      * always return {@code true}.
      * 
@@ -45,11 +48,18 @@ public class YanivUtils {
         if (cards.size() == 0 || cards.size() > Suit.values().length)
             return false;
 
-        Iterator<Card> itr = cards.iterator();
+        // don't wanna start with a joker so we sort
+        List<Card> cardsList = sortedSet(cards);
+
+        Iterator<Card> itr = cardsList.iterator();
         FaceValue val = itr.next().val();
-        while (itr.hasNext())
-            if (itr.next().val() != val)
+
+        while (itr.hasNext()) {
+            Card next = itr.next();
+            if (next.val() != val && !next.isJoker())
                 return false;
+        }
+
         return true;
     }
 
@@ -58,11 +68,18 @@ public class YanivUtils {
         if (cards.size() == 0 || cards.size() > FaceValue.values().length)
             return false;
 
-        Iterator<Card> itr = cards.iterator();
+        // don't wanna start with a joker so we sort
+        List<Card> cardsList = sortedSet(cards);
+
+        Iterator<Card> itr = cardsList.iterator();
         Suit suit = itr.next().suit();
-        while (itr.hasNext())
-            if (itr.next().suit() != suit)
+
+        while (itr.hasNext()) {
+            Card next = itr.next();
+            if (next.suit() != suit && !next.isJoker())
                 return false;
+        }
+
         return true;
     }
 
@@ -71,14 +88,17 @@ public class YanivUtils {
         if (cards.size() == 0 || cards.size() > FaceValue.values().length)
             return false;
 
-        List<Card> cardsList = new ArrayList<>(cards);
-        Collections.sort(cardsList);
+        List<Card> cardsList = sortedSet(cards);
+
         Iterator<Card> itr = cardsList.iterator();
-        FaceValue curr = itr.next().val();
+        Card curr = itr.next();
+
         while (itr.hasNext()) {
-            FaceValue next = itr.next().val();
-            if ((curr.asInt() + 1) != next.asInt())
+            Card next = itr.next();
+
+            if (!curr.isJoker() && (curr.val().asInt() + 1) != next.val().asInt() && !next.isJoker())
                 return false;
+
             curr = next;
         }
         return true;

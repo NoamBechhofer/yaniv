@@ -18,18 +18,24 @@ public class Deck {
     Stack<Card> cards;
 
     /**
-     * Produce a regular 52-card deck (no jokers).
+     * Produce a regular 54-card deck.
      */
     public Deck() {
         this.cards = new Stack<>();
 
-        for (FaceValue v : FaceValue.values()) {
-            for (Suit s : Suit.values()) {
-                cards.add(new Card(v, s));
+        cards.push(new Card(FaceValue.JOKER, Suit.HEARTS));
+        cards.push(new Card(FaceValue.JOKER, Suit.SPADES));
+
+        // the first value will be joker
+        FaceValue[] values = FaceValue.values();
+        for (Suit s : Suit.values()) {
+            // skip 0 because we already populated Jokers
+            for (int i = 1; i < values.length; i++) {
+                cards.push(new Card(values[i], s));
             }
         }
 
-        assert this.size() == 52;
+        assert this.size() == 54;
     }
 
     /**

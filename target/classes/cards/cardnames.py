@@ -1,15 +1,17 @@
-# current format: {card name/number}_of_{card suit}.png
-# desired format: {card number}_{first letter of suit}.png
+# card images obtained from https://code.google.com/archive/p/vector-playing-cards/
 
 import subprocess as sp
 
-currentvals = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
-desiredvals = ["ACE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", "TEN", "JACK", "QUEEN", "KING"]
 
-currentsuits = ["c", "d", "h", "s"]
+currentvals = ["ace", "2", "3", "4", "5", "6",
+               "7", "8", "9", "10", "jack", "queen", "king"]
+desiredvals = ["ACE", "TWO", "THREE", "FOUR", "FIVE", "SIX",
+               "SEVEN", "EIGHT", "NINE", "TEN", "JACK", "QUEEN", "KING"]
+
+currentsuits = ["clubs", "diamonds", "hearts", "spades"]
 desiredsuits = ["CLUBS", "DIAMONDS", "HEARTS", "SPADES"]
 
 for n in currentvals:
     for c in currentsuits:
         sp.run(
-            f"mv {n}_{c}.png {desiredvals[currentvals.index(n)]}_{desiredsuits[currentsuits.index(c)]}.png")
+            f"mv {n}_of_{c}.png {desiredvals[currentvals.index(n)]}_{desiredsuits[currentsuits.index(c)]}.png")

@@ -15,4 +15,11 @@ public interface Player {
      * Make a move.
      */
     public void doTurn();
+
+    /**
+     * Returns this Player's points
+     * 
+     * @return this Player's points
+     */
+    public int points();
 }

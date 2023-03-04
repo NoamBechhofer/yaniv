@@ -20,6 +20,12 @@ import org.openimaj.image.MBFImage;
  * Note: this class has a natural ordering that is inconsistent with equals.
  */
 public class Card implements Comparable<Card> {
+    static {
+        boolean assertsEnabled = false;
+        assert assertsEnabled = true; // Intentional side effect!!!
+        if (!assertsEnabled)
+            throw new RuntimeException("Asserts must be enabled!!!");
+    }
 
     /**
      * Face value.
@@ -75,10 +81,9 @@ public class Card implements Comparable<Card> {
      */
     @Override
     public int hashCode() {
+        assert this.val.asInt() != 0 && this.suit().asInt() != 0;
 
-        int suitInt = this.suit.asInt();
-
-        return this.val.asInt() * suitInt;
+        return this.val.asInt() * this.suit.asInt();
     }
 
     /**
@@ -178,10 +183,26 @@ public class Card implements Comparable<Card> {
         return this.val() == FaceValue.JOKER;
     }
 
-    // todo javadoc
+    /**
+     * Check whether a {@link Set} of cards constitute a straight, i.e. with Jokers
+     * as wild cards, whether it is a sequence of conecutive ranks
+     * 
+     * @param cards set of cards to be checked
+     * @return true if the set constitutes a straight
+     */
     public static boolean isStraight(Set<Card> cards) {
-        if (cards.size() == 0 || cards.size() > FaceValue.values().length)
+        if (cards.size() == 0 || cards.size() > FaceValue.values().length + 1)
             return false;
+
+        int numJokers;
+        Card redJoker = new Card(FaceValue.JOKER, Suit.HEARTS);
+        Card blackJoker = new Card(FaceValue.JOKER, Suit.SPADES);
+        if (cards.contains(redJoker) && cards.contains(blackJoker))
+            numJokers = 2;
+        else if (cards.contains(redJoker) || cards.contains(blackJoker))
+            numJokers = 1;
+        else
+            numJokers = 0;
 
         List<Card> cardsList = SetSorter.sort(cards);
 
@@ -191,7 +212,7 @@ public class Card implements Comparable<Card> {
         while (itr.hasNext()) {
             Card next = itr.next();
 
-            if (!curr.isJoker() && (curr.val().asInt() + 1) != next.val().asInt() && !next.isJoker())
+            if (!curr.isJoker() && (curr.val().asInt() + 1) != next.val().asInt() && !next.isJoker() && numJokers-- < 1)
                 return false;
 
             curr = next;
@@ -199,9 +220,16 @@ public class Card implements Comparable<Card> {
         return true;
     }
 
-    // todo javadoc
+    /**
+     * Test whether a {@link Set} of {@link Card}s all share the same suit.  A
+     * set of size 0 will always return {@code false}, and a set of size 1 will
+     * always return {@code true}.
+     * 
+     * @param cards Set of Cards to test
+     * @return true if all the cards share the same suit.
+     */
     public static boolean sameSuit(Set<Card> cards) {
-        if (cards.size() == 0 || cards.size() > FaceValue.values().length)
+        if (cards.size() == 0 || cards.size() > FaceValue.values().length + 1) // + 1 for the 2nd joker
             return false;
 
         // don't wanna start with a joker so we sort
@@ -228,7 +256,7 @@ public class Card implements Comparable<Card> {
      * @return true if all the cards share the same face value
      */
     public static boolean sameVal(Set<Card> cards) {
-        if (cards.size() == 0 || cards.size() > Suit.values().length)
+        if (cards.size() == 0 || cards.size() > Suit.values().length + 2) // + 2 for jokers
             return false;
 
         // don't wanna start with a joker so we sort
@@ -289,6 +317,7 @@ enum Suit {
     }
 }
 
+// TODO rename "rank"
 /** The face value of a Card */
 enum FaceValue {
     ACE(1), TWO(2), THREE(3), FOUR(4), FIVE(5), SIX(6), SEVEN(7), EIGHT(8),

@@ -40,13 +40,13 @@ public class Game {
 
         
     
-        boolean sameVal = Card.sameVal(cards);
+        boolean sameRank = Card.sameRank(cards);
 
         boolean size = cards.size() >= 3;
         boolean suit = Card.sameSuit(cards);
         boolean straight = Card.isStraight(cards);
 
-        if (sameVal || size && suit && straight )
+        if (sameRank || size && suit && straight )
             return true;
         return false;
     }

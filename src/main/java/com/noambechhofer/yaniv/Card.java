@@ -28,11 +28,11 @@ public class Card implements Comparable<Card> {
     }
 
     /**
-     * Face value.
+     * Rank.
      * 
      * See class documentation for encoding format.
      */
-    private FaceValue val;
+    private Rank rank;
     /**
      * Suit.
      * 
@@ -43,26 +43,26 @@ public class Card implements Comparable<Card> {
     /**
      * Instantiate a Card
      * 
-     * @param val  a face value selected from the {@link FaceValue} enum.
+     * @param rank  a rank selected from the {@link Rank} enum.
      * @param suit a suit selected from the {@link Suit} enum.
      *             <p>
      *             Red Jokers should be instantiated as hearts, black jokers as
      *             spades
      */
-    public Card(FaceValue val, Suit suit) {
-        if (val == FaceValue.JOKER && (suit != Suit.HEARTS && suit != Suit.SPADES))
+    public Card(Rank rank, Suit suit) {
+        if (rank == Rank.JOKER && (suit != Suit.HEARTS && suit != Suit.SPADES))
             throw new RuntimeException("bad joker construction");
-        this.val = val;
+        this.rank = rank;
         this.suit = suit;
     }
 
     /**
      * Accessor method
      * 
-     * @return the face value of this card.
+     * @return the rank of this card.
      */
-    public FaceValue val() {
-        return this.val;
+    public Rank rank() {
+        return this.rank;
     }
 
     /**
@@ -81,9 +81,9 @@ public class Card implements Comparable<Card> {
      */
     @Override
     public int hashCode() {
-        assert this.val.asInt() != 0 && this.suit().asInt() != 0;
+        assert this.rank.asInt() != 0 && this.suit().asInt() != 0;
 
-        return this.val.asInt() * this.suit.asInt();
+        return this.rank.asInt() * this.suit.asInt();
     }
 
     /**
@@ -96,7 +96,7 @@ public class Card implements Comparable<Card> {
      */
     public boolean equals(Object obj) {
         if (obj instanceof Card)
-            return obj != null && this.val == ((Card) obj).val() && this.suit == ((Card) obj).suit();
+            return obj != null && this.rank == ((Card) obj).rank() && this.suit == ((Card) obj).suit();
         return super.equals(obj);
     }
 
@@ -114,7 +114,7 @@ public class Card implements Comparable<Card> {
                 return "Black Joker";
             else
                 throw new AssertionError("Invalid Joker encoding");
-        return String.format("%s of %s", val, suit);
+        return String.format("%s of %s", rank, suit);
     }
 
     /**
@@ -131,7 +131,7 @@ public class Card implements Comparable<Card> {
      */
     @Override
     public int compareTo(Card c) {
-        return this.val.asInt() - c.val().asInt();
+        return this.rank.asInt() - c.rank().asInt();
     }
 
     /**
@@ -140,7 +140,7 @@ public class Card implements Comparable<Card> {
      * @return the value of this Card to be used when tallying points
      */
     public int yanivValue() {
-        switch (this.val) {
+        switch (this.rank) {
             case JOKER:
                 return 0;
             case JACK:
@@ -148,7 +148,7 @@ public class Card implements Comparable<Card> {
             case KING:
                 return 10;
             default:
-                return this.val.asInt();
+                return this.rank.asInt();
         }
     }
 
@@ -159,7 +159,7 @@ public class Card implements Comparable<Card> {
      * @return an image of this Card
      */
     public MBFImage toImage() {
-        String imagePath = YanivProperties.RESOURCES_PATH + "cards\\" + this.val + "_" + this.suit + ".png";
+        String imagePath = YanivProperties.RESOURCES_PATH + "cards\\" + this.rank + "_" + this.suit + ".png";
         File imageFile = new File(imagePath);
 
         MBFImage image = null;
@@ -180,7 +180,7 @@ public class Card implements Comparable<Card> {
      * @return true if this Card represents a Joker
      */
     public boolean isJoker() {
-        return this.val() == FaceValue.JOKER;
+        return this.rank() == Rank.JOKER;
     }
 
     /**
@@ -191,12 +191,12 @@ public class Card implements Comparable<Card> {
      * @return true if the set constitutes a straight
      */
     public static boolean isStraight(Set<Card> cards) {
-        if (cards.size() == 0 || cards.size() > FaceValue.values().length + 1)
+        if (cards.size() == 0 || cards.size() > Rank.values().length + 1)
             return false;
 
         int numJokers;
-        Card redJoker = new Card(FaceValue.JOKER, Suit.HEARTS);
-        Card blackJoker = new Card(FaceValue.JOKER, Suit.SPADES);
+        Card redJoker = new Card(Rank.JOKER, Suit.HEARTS);
+        Card blackJoker = new Card(Rank.JOKER, Suit.SPADES);
         if (cards.contains(redJoker) && cards.contains(blackJoker))
             numJokers = 2;
         else if (cards.contains(redJoker) || cards.contains(blackJoker))
@@ -212,7 +212,7 @@ public class Card implements Comparable<Card> {
         while (itr.hasNext()) {
             Card next = itr.next();
 
-            if (!curr.isJoker() && (curr.val().asInt() + 1) != next.val().asInt() && !next.isJoker() && numJokers-- < 1)
+            if (!curr.isJoker() && (curr.rank().asInt() + 1) != next.rank().asInt() && !next.isJoker() && numJokers-- < 1)
                 return false;
 
             curr = next;
@@ -229,7 +229,7 @@ public class Card implements Comparable<Card> {
      * @return true if all the cards share the same suit.
      */
     public static boolean sameSuit(Set<Card> cards) {
-        if (cards.size() == 0 || cards.size() > FaceValue.values().length + 1) // + 1 for the 2nd joker
+        if (cards.size() == 0 || cards.size() > Rank.values().length + 1) // + 1 for the 2nd joker
             return false;
 
         // don't wanna start with a joker so we sort
@@ -248,14 +248,14 @@ public class Card implements Comparable<Card> {
     }
 
     /**
-     * Test whether a {@link Set} of {@link Card}s all share the same face value. A
+     * Test whether a {@link Set} of {@link Card}s all share the same rank. A
      * set of size 0 will always return {@code false}, and a set of size 1 will
      * always return {@code true}.
      * 
      * @param cards Set of Cards to test
-     * @return true if all the cards share the same face value
+     * @return true if all the cards share the same face rank
      */
-    public static boolean sameVal(Set<Card> cards) {
+    public static boolean sameRank(Set<Card> cards) {
         if (cards.size() == 0 || cards.size() > Suit.values().length + 2) // + 2 for jokers
             return false;
 
@@ -263,11 +263,11 @@ public class Card implements Comparable<Card> {
         List<Card> cardsList = SetSorter.sort(cards);
 
         Iterator<Card> itr = cardsList.iterator();
-        FaceValue val = itr.next().val();
+        Rank rank = itr.next().rank();
 
         while (itr.hasNext()) {
             Card next = itr.next();
-            if (next.val() != val && !next.isJoker())
+            if (next.rank() != rank && !next.isJoker())
                 return false;
         }
 
@@ -317,28 +317,27 @@ enum Suit {
     }
 }
 
-// TODO rename "rank"
-/** The face value of a Card */
-enum FaceValue {
+/** The rank of a Card */
+enum Rank {
     ACE(1), TWO(2), THREE(3), FOUR(4), FIVE(5), SIX(6), SEVEN(7), EIGHT(8),
     NINE(9), TEN(10), JACK(11), QUEEN(12), KING(13), JOKER(14);
 
     /**
-     * numerical representation of this FaceValue. Useful for determining straights.
+     * numerical representation of this Rank. Useful for determining straights.
      */
-    private int val;
+    private int rank;
 
-    FaceValue(int val) {
-        this.val = val;
+    Rank(int rank) {
+        this.rank = rank;
     }
 
     /**
-     * Returns a numerical representation of this FaceValue. ACE is
+     * Returns a numerical representation of this Rank. ACE is
      * 1, TWO - TEN are 2 - 10, and JACK - KING are 11 - 13, JOKER is 14.
      * 
-     * @return a numerical representation of this FaceValue
+     * @return a numerical representation of this Rank
      */
     public int asInt() {
-        return this.val;
+        return this.rank;
     }
 }

@@ -22,15 +22,15 @@ public class Deck {
     public Deck() {
         this.cards = new Stack<>();
 
-        cards.push(new Card(FaceValue.JOKER, Suit.HEARTS));
-        cards.push(new Card(FaceValue.JOKER, Suit.SPADES));
+        cards.push(new Card(Rank.JOKER, Suit.HEARTS));
+        cards.push(new Card(Rank.JOKER, Suit.SPADES));
 
-        // the first value will be joker
-        FaceValue[] values = FaceValue.values();
+        // the first rank will be joker
+        Rank[] ranks = Rank.values();
         for (Suit s : Suit.values()) {
             // skip 0 because we already populated Jokers
-            for (int i = 1; i < values.length; i++) {
-                cards.push(new Card(values[i], s));
+            for (int i = 1; i < ranks.length; i++) {
+                cards.push(new Card(ranks[i], s));
             }
         }
 

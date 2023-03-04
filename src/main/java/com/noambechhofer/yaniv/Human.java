@@ -1,9 +1,6 @@
 package com.noambechhofer.yaniv;
 
-import java.util.HashSet;
-import java.util.InputMismatchException;
 import java.util.List;
-import java.util.Scanner;
 import java.util.Set;
 
 public class Human implements Player {

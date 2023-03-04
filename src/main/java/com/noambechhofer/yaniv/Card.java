@@ -48,6 +48,7 @@ public class Card implements Comparable<Card> {
      *             <p>
      *             Red Jokers should be instantiated as hearts, black jokers as
      *             spades
+     * @throws RuntimeException if a joker is constructed with the wrong suit
      */
     public Card(Rank rank, Suit suit) {
         if (rank == Rank.JOKER && (suit != Suit.HEARTS && suit != Suit.SPADES))

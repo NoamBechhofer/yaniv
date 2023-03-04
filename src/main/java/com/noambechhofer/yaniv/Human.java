@@ -36,7 +36,7 @@ public class Human implements Player {
      */
     @Override
     public void doTurn() {
-        YanivUtils.clearTerminal();
+        clearTerminal();
 
         Set<Card> toDiscard = new HashSet<>();
 
@@ -49,7 +49,7 @@ public class Human implements Player {
 
             Card choice = null;
             try {
-                choice = YanivUtils.sortedSet(this.hand).get(sc.nextInt() - 1);
+                choice = SetSorter.sort(this.hand).get(sc.nextInt() - 1);
             } catch (NullPointerException e) {
                 System.out.println("Index out of range!");
 
@@ -65,7 +65,7 @@ public class Human implements Player {
             boolean worked = this.hand.remove(choice) && toDiscard.add(choice);
             assert worked : choice;
 
-            YanivUtils.clearTerminal();
+            clearTerminal();
 
             System.out.println();
             System.out.println("Selected: ");
@@ -83,7 +83,7 @@ public class Human implements Player {
     public String toString() {
         StringBuilder sb = new StringBuilder("Your hand:\n");
 
-        List<Card> handList = YanivUtils.sortedSet(this.hand);
+        List<Card> handList = SetSorter.sort(this.hand);
 
         for (Card c : handList)
             sb.append(String.format("%d. %s\t", handList.indexOf(c) + 1, c.toString()));
@@ -91,5 +91,11 @@ public class Human implements Player {
         sb.append(String.format("\n Your points: %d", this.game.getPoints(this)));
 
         return sb.toString();
+    }
+
+    // todo: replace with shell command based on platform
+    public static void clearTerminal() {
+        for (int i = 0; i < 100; i++)
+            System.out.println("\n");
     }
 }

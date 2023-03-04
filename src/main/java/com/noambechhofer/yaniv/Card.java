@@ -2,7 +2,9 @@ package com.noambechhofer.yaniv;
 
 import java.io.File;
 import java.io.IOException;
-
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 import java.awt.Color;
 
 import org.openimaj.image.ImageUtilities;
@@ -132,7 +134,7 @@ public class Card implements Comparable<Card> {
      * @return an image of this Card
      */
     public MBFImage toImage() {
-        String imagePath = YanivUtils.RESOURCES_PATH + "cards\\" + this.val + "_" + this.suit + ".png";
+        String imagePath = YanivProperties.RESOURCES_PATH + "cards\\" + this.val + "_" + this.suit + ".png";
         File imageFile = new File(imagePath);
 
         MBFImage image = null;
@@ -154,6 +156,74 @@ public class Card implements Comparable<Card> {
      */
     public boolean isJoker() {
         return this.val() == FaceValue.JOKER;
+    }
+
+    // todo javadoc
+    public static boolean isStraight(Set<Card> cards) {
+        if (cards.size() == 0 || cards.size() > FaceValue.values().length)
+            return false;
+
+        List<Card> cardsList = SetSorter.sort(cards);
+
+        Iterator<Card> itr = cardsList.iterator();
+        Card curr = itr.next();
+
+        while (itr.hasNext()) {
+            Card next = itr.next();
+
+            if (!curr.isJoker() && (curr.val().asInt() + 1) != next.val().asInt() && !next.isJoker())
+                return false;
+
+            curr = next;
+        }
+        return true;
+    }
+
+    // todo javadoc
+    public static boolean sameSuit(Set<Card> cards) {
+        if (cards.size() == 0 || cards.size() > FaceValue.values().length)
+            return false;
+
+        // don't wanna start with a joker so we sort
+        List<Card> cardsList = SetSorter.sort(cards);
+
+        Iterator<Card> itr = cardsList.iterator();
+        Suit suit = itr.next().suit();
+
+        while (itr.hasNext()) {
+            Card next = itr.next();
+            if (next.suit() != suit && !next.isJoker())
+                return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Test whether a {@link Set} of {@link Card}s all share the same face value. A
+     * set of size 0 will always return {@code false}, and a set of size 1 will
+     * always return {@code true}.
+     * 
+     * @param cards Set of Cards to test
+     * @return true if all the cards share the same face value
+     */
+    public static boolean sameVal(Set<Card> cards) {
+        if (cards.size() == 0 || cards.size() > Suit.values().length)
+            return false;
+
+        // don't wanna start with a joker so we sort
+        List<Card> cardsList = SetSorter.sort(cards);
+
+        Iterator<Card> itr = cardsList.iterator();
+        FaceValue val = itr.next().val();
+
+        while (itr.hasNext()) {
+            Card next = itr.next();
+            if (next.val() != val && !next.isJoker())
+                return false;
+        }
+
+        return true;
     }
 }
 

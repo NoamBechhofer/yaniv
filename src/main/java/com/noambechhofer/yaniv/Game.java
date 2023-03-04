@@ -38,14 +38,14 @@ public class Game {
     public Set<Card> initializePlayer(Player p) throws PlayerRefusalException {
         assert !players.contains(p) : "duplicate player!!";
 
-        if (players.size() >= YanivUtils.MAX_PLAYERS)
+        if (players.size() >= YanivProperties.MAX_PLAYERS)
             throw new PlayerRefusalException("too many players");
 
         this.players.add(p);
         this.points.put(p, 0);
 
         Set<Card> hand = new HashSet<>();
-        for (int i = 0; i < YanivUtils.NUM_STARTING_CARDS; i++) {
+        for (int i = 0; i < YanivProperties.NUM_STARTING_CARDS; i++) {
             Card tmp = this.deck.removeTopCard();
             boolean added = hand.add(tmp);
             assert added : tmp;
@@ -106,6 +106,25 @@ public class Game {
 
     public int getPoints(Player p) {
         return this.points.get(p);
+    }
+
+    // todo: add test
+    /**
+     * Verify that the given set is valid under yaniv rules. Always returns false
+     * for {@link Set} of size 0.
+     * 
+     * @param cards
+     * @return
+     */
+    public static boolean validateSet(Set<Card> cards) {
+        if (cards.size() == 0)
+            return false;
+        if (cards.size() == 1)
+            return true;
+    
+        if (Card.sameVal(cards) || ((Card.sameSuit(cards) && Card.isStraight(cards))) )
+            return true;
+        return false;
     }
 }
 

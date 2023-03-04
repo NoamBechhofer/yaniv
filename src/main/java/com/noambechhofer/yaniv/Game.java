@@ -25,6 +25,32 @@ public class Game {
         this.discardPile = new Stack<>();
     }
 
+    /**
+     * Verify that the given set is valid under yaniv rules. Always returns false
+     * for {@link Set} of size 0.
+     * 
+     * @param cards set of cards to be checked
+     * @return true if the given set is valid under yaniv rules.
+     */
+    public static boolean validate(Set<Card> cards) {
+        if (cards.size() == 0)
+            return false;
+        if (cards.size() == 1)
+            return true;
+
+        
+    
+        boolean sameVal = Card.sameVal(cards);
+
+        boolean size = cards.size() >= 3;
+        boolean suit = Card.sameSuit(cards);
+        boolean straight = Card.isStraight(cards);
+
+        if (sameVal || size && suit && straight )
+            return true;
+        return false;
+    }
+
     public Set<Card> peekDiscardPile() {
         return this.discardPile.peek();
     }
@@ -106,25 +132,6 @@ public class Game {
 
     public int getPoints(Player p) {
         return this.points.get(p);
-    }
-
-    // todo: add test
-    /**
-     * Verify that the given set is valid under yaniv rules. Always returns false
-     * for {@link Set} of size 0.
-     * 
-     * @param cards
-     * @return
-     */
-    public static boolean validateSet(Set<Card> cards) {
-        if (cards.size() == 0)
-            return false;
-        if (cards.size() == 1)
-            return true;
-    
-        if (Card.sameVal(cards) || ((Card.sameSuit(cards) && Card.isStraight(cards))) )
-            return true;
-        return false;
     }
 }
 

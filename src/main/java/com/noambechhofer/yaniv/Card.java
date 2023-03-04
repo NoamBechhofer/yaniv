@@ -44,6 +44,8 @@ public class Card implements Comparable<Card> {
      *             spades
      */
     public Card(FaceValue val, Suit suit) {
+        if (val == FaceValue.JOKER && (suit != Suit.HEARTS && suit != Suit.SPADES))
+            throw new RuntimeException("bad joker construction");
         this.val = val;
         this.suit = suit;
     }
@@ -125,6 +127,24 @@ public class Card implements Comparable<Card> {
     @Override
     public int compareTo(Card c) {
         return this.val.asInt() - c.val().asInt();
+    }
+
+    /**
+     * Returns the value of this Card to be used when tallying points
+     * 
+     * @return the value of this Card to be used when tallying points
+     */
+    public int yanivValue() {
+        switch (this.val) {
+            case JOKER:
+                return 0;
+            case JACK:
+            case QUEEN:
+            case KING:
+                return 10;
+            default:
+                return this.val.asInt();
+        }
     }
 
     /**

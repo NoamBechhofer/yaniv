@@ -103,13 +103,12 @@ public class Game {
     /**
      * Draw from the deck
      * 
-     * todo: assert valid set
-     * 
      * @param cards a valid combination of cards to discard
      * @return the top card on the deck
      */
     public Card drawFromDeck(Set<Card> cards) {
         assert (cards.size() > 0);
+        assert validate(cards);
 
         this.discardPile.push(cards);
 

@@ -35,46 +35,7 @@ public class Human implements Player {
      * {@inheritDoc}
      */
     @Override
-    public void doTurn() {
-        clearTerminal();
-
-        Set<Card> toDiscard = new HashSet<>();
-
-        Scanner sc = new Scanner(System.in);
-        while (sc.hasNext()) {
-
-            System.out.println(
-                    "Which cards do you want to discard? Enter a number, and ctrl-d when you're finished selecting.");
-            System.out.println(this);
-
-            Card choice = null;
-            try {
-                choice = SetSorter.sort(this.hand).get(sc.nextInt() - 1);
-            } catch (NullPointerException e) {
-                System.out.println("Index out of range!");
-
-                e.printStackTrace(System.err); // todo: log this properly
-                continue;
-            } catch (InputMismatchException e) {
-                System.out.println("That's not a number, please try again");
-
-                e.printStackTrace(System.err); // todo: log this properly
-                continue;
-            }
-
-            boolean worked = this.hand.remove(choice) && toDiscard.add(choice);
-            assert worked : choice;
-
-            clearTerminal();
-
-            System.out.println();
-            System.out.println("Selected: ");
-            for (Card c : toDiscard)
-                System.out.printf("%s\t", c.toString());
-        }
-
-        sc.close();
-    }
+    public void doTurn() { }
 
     /**
      * {@inheritDoc}
@@ -95,7 +56,6 @@ public class Human implements Player {
 
     // todo: replace with shell command based on platform
     public static void clearTerminal() {
-        for (int i = 0; i < 100; i++)
-            System.out.println("\n");
+        System.out.println(System.lineSeparator().repeat(50));
     }
 }

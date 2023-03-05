@@ -62,11 +62,11 @@ public class Game {
      * @return this player's starting hand.
      * @throws PlayerRefusalException if there are too many players
      */
-    public Set<Card> initializePlayer(Player p) throws PlayerRefusalException {
+    public Set<Card> initializePlayer(Player p){
         assert !players.contains(p) : "duplicate player!!";
 
         if (players.size() >= YanivProperties.MAX_PLAYERS)
-            throw new PlayerRefusalException("too many players");
+            throw new RuntimeException("too many players");
 
         this.players.add(p);
 
@@ -146,31 +146,5 @@ public class Game {
             tally += c.yanivValue();
 
         return tally;
-    }
-}
-
-/**
- * Thrown when a player has tried to enter a game but has been refused
- */
-class PlayerRefusalException extends Exception {
-    public PlayerRefusalException() {
-        super();
-    }
-
-    public PlayerRefusalException(String message) {
-        super(message);
-    }
-
-    public PlayerRefusalException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    protected PlayerRefusalException(String message, Throwable cause, boolean enableSuppression,
-            boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
-
-    public PlayerRefusalException(Throwable cause) {
-        super(cause);
     }
 }

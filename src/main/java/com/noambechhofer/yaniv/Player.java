@@ -2,17 +2,34 @@ package com.noambechhofer.yaniv;
 
 import java.util.Set;
 
+import java.util.Collection;
+
 public interface Player {
     /**
-     * Check this Player's hand. Should only be called on yaniv/assaf checks. It
-     * would be good practice to return an immutable list as a safety guard.
+     * Used by the Dealer to signal that the round has ended. The Player should
+     * {@link Game#tally(Collection)} their points and add their score. Will not be
+     * sent to the player who called Yaniv.
+     */
+    public void endRound();
+
+    /**
+     * Return this Player's hand to the Dealer
      * 
      * @return this Player's hand
      */
-    public Set<Card> hand();
+    public Collection<Card> removeHand();
 
     /**
-     * Make a move.
+     * Check this Player's hand but do not remove it. It would be good practice to
+     * return an immutable {@link Collection}.
+     * 
+     * @return this Player's hand
+     */
+    public Collection<Card> peekHand();
+
+    /**
+     * Make a move. The contract is that the Player will call drawFromDiscard() or
+     * drawFromDeck()
      */
     public void doTurn();
 
@@ -22,4 +39,8 @@ public interface Player {
      * @return this Player's points
      */
     public int points();
+
+    public void giveStartingHand(Set<Card> hand);
+
+    public void dealToHand(Card c);
 }

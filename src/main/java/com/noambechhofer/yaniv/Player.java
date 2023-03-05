@@ -1,7 +1,5 @@
 package com.noambechhofer.yaniv;
 
-import java.util.Set;
-
 import java.util.Collection;
 
 public interface Player {

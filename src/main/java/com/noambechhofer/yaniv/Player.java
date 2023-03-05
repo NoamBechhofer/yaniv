@@ -26,8 +26,8 @@ public interface Player {
     public Collection<Card> peekHand();
 
     /**
-     * Make a move. The contract is that the Player will call drawFromDiscard() or
-     * drawFromDeck()
+     * Make a move. The contract is that the Player will call {@link Game#drawFromDiscard()} or
+     * {@link Game#drawFromDeck()}
      */
     public void doTurn();
 
@@ -36,7 +36,7 @@ public interface Player {
      * 
      * @return this Player's points
      */
-    public int points();
+    public int score();
 
     /**
      * Dealer calls this to deal a Card to this Player's hand

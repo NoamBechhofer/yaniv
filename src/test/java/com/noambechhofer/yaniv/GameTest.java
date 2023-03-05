@@ -14,36 +14,49 @@ public class GameTest {
         gt.testValidateSet();
     }
 
-    
     @Test
     public void testValidateSet() {
-
-        Card[] allTwos = { new Card(Rank.TWO, Suit.CLUBS), new Card(Rank.TWO, Suit.DIAMONDS),
-                new Card(Rank.TWO, Suit.HEARTS), new Card(Rank.TWO, Suit.SPADES) };
         Card redJoker = new Card(Rank.JOKER, Suit.HEARTS);
         Card blackJoker = new Card(Rank.JOKER, Suit.SPADES);
 
         Set<Card> cards = new HashSet<>();
-        for (int i = 0; i < 4; i++) {
-            cards.add(allTwos[i]);
-            assertTrue(Game.validate(cards));
+        for (Rank r : Rank.values()) {
+            for (Suit s : Suit.values()) {
+                try {
+                    cards.add(new Card(r, s));
+                } catch (RuntimeException e) {
+                    continue;
+                }
+                assertTrue(Game.validate(cards));
+            }
+            cards = new HashSet<>();
         }
-
-        cards = new HashSet<>();
 
         cards.add(redJoker);
-        for (int i = 0; i < 4; i++) {
-            cards.add(allTwos[i]);
-            assertTrue(Game.validate(cards));
+        for (Rank r : Rank.values()) {
+            for (Suit s : Suit.values()) {
+                try {
+                    cards.add(new Card(r, s));
+                } catch (RuntimeException e) {
+                    continue;
+                }
+                assertTrue(Game.validate(cards));
+            }
+            cards = new HashSet<>();
         }
-
-        cards = new HashSet<>();
 
         cards.add(redJoker);
         cards.add(blackJoker);
-        for (int i = 0; i < 4; i++) {
-            cards.add(allTwos[i]);
-            assertTrue(Game.validate(cards));
+        for (Rank r : Rank.values()) {
+            for (Suit s : Suit.values()) {
+                try {
+                    cards.add(new Card(r, s));
+                } catch (RuntimeException e) {
+                    continue;
+                }
+                assertTrue(Game.validate(cards));
+            }
+            cards = new HashSet<>();
         }
 
         cards = new HashSet<>();

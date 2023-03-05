@@ -82,15 +82,18 @@ public class Game {
     /**
      * Draw from the discard pile.
      * 
-     * todo: assert rules about ends of a straight
-     * todo: assert valid set
+     * TODO: assert rules about ends of a straight
      * 
-     * @param c the Card to be removed. Must be part of the previous player's discard. 
+     * @param c     the Card to be removed. Must be part of the previous player's
+     *              discard.
      * @param cards valid set of cards to discard
      * @return the requested Card
      */
     public Card drawFromDiscard(Card c, Set<Card> cards) {
         assert cards.size() > 0;
+        assert validate(cards);
+
+        this.canSlap = false;
 
         boolean removed = this.discardPile.peek().remove(c);
         assert removed : c;
@@ -104,11 +107,14 @@ public class Game {
      * Draw from the deck
      * 
      * @param cards a valid combination of cards to discard
+     * 
      * @return the top card on the deck
      */
     public Card drawFromDeck(Set<Card> cards) {
-        assert (cards.size() > 0);
+        assert cards.size() > 0;
         assert validate(cards);
+
+        this.canSlap = false;
 
         this.discardPile.push(cards);
 

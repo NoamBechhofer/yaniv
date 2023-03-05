@@ -11,7 +11,6 @@ public class Game {
 
     // we register players by giving them their starting hand
     private Set<Player> players;
-    private Map<Player, Integer> points;
     private Deck deck;
     private Stack<Set<Card>> discardPile; // Each discard is a set. That way we can access any of the cards from the
                                           // previous discard.
@@ -20,7 +19,6 @@ public class Game {
 
     public Game() {
         this.players = new LockableHashSet<>();
-        this.points = new HashMap<>();
 
         this.deck = new Deck();
         this.deck.shuffle();
@@ -71,7 +69,6 @@ public class Game {
             throw new PlayerRefusalException("too many players");
 
         this.players.add(p);
-        this.points.put(p, 0);
 
         Set<Card> hand = new HashSet<>();
         for (int i = 0; i < YanivProperties.NUM_STARTING_CARDS; i++) {
@@ -149,10 +146,6 @@ public class Game {
             tally += c.yanivValue();
 
         return tally;
-    }
-
-    public int getPoints(Player p) {
-        return this.points.get(p);
     }
 }
 

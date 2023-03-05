@@ -43,7 +43,7 @@ public class Card implements Comparable<Card> {
     /**
      * Instantiate a Card
      * 
-     * @param rank  a rank selected from the {@link Rank} enum.
+     * @param rank a rank selected from the {@link Rank} enum.
      * @param suit a suit selected from the {@link Suit} enum.
      *             <p>
      *             Red Jokers should be instantiated as hearts, black jokers as
@@ -136,7 +136,15 @@ public class Card implements Comparable<Card> {
     }
 
     /**
-     * Returns the value of this Card to be used when tallying points
+     * Returns the value of this Card to be used when tallying points.
+     * <p>
+     * The rules for this value are:
+     * <ul>
+     *     <li> Jokers are worth 0 points </li>
+     *     <li> Aces are worth 1 point </li>
+     *     <li> 2 - 10 are worht their respective ranks </li>
+     *     <li> royals are worth 10 points </li>
+     * </ul>
      * 
      * @return the value of this Card to be used when tallying points
      */
@@ -167,7 +175,7 @@ public class Card implements Comparable<Card> {
         try {
             image = ImageUtilities.readMBF(imageFile);
         } catch (IOException e) {
-            System.err.println("Could not find image at " + imagePath); // todo log properly
+            System.err.println("Could not find image at " + imagePath); // TODO log properly
             e.printStackTrace(System.err);
             System.exit(1);
         }
@@ -213,7 +221,8 @@ public class Card implements Comparable<Card> {
         while (itr.hasNext()) {
             Card next = itr.next();
 
-            if (!curr.isJoker() && (curr.rank().asInt() + 1) != next.rank().asInt() && !next.isJoker() && numJokers-- < 1)
+            if (!curr.isJoker() && (curr.rank().asInt() + 1) != next.rank().asInt() && !next.isJoker()
+                    && numJokers-- < 1)
                 return false;
 
             curr = next;
@@ -222,7 +231,7 @@ public class Card implements Comparable<Card> {
     }
 
     /**
-     * Test whether a {@link Set} of {@link Card}s all share the same suit.  A
+     * Test whether a {@link Set} of {@link Card}s all share the same suit. A
      * set of size 0 will always return {@code false}, and a set of size 1 will
      * always return {@code true}.
      * 
@@ -283,9 +292,9 @@ enum Suit {
     CLUBS, DIAMONDS, HEARTS, SPADES;
 
     /**
-     * Returns {@link Color.BLACK} or {@link Color.RED}
+     * Returns {@link Color#BLACK} or {@link Color#RED}
      * 
-     * @return {@link Color.BLACK} or {@link Color.RED}
+     * @return {@link Color#BLACK} or {@link Color#RED}
      */
     public Color color() {
         if (this == CLUBS || this == SPADES)

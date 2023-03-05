@@ -1,5 +1,6 @@
 package com.noambechhofer.yaniv;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -127,6 +128,22 @@ public class Game {
      */
     public boolean slapDown(Card c) {
         throw new UnsupportedOperationException("Unimplemented method 'slapDown'");
+    }
+
+    /**
+     * Tally a {@link Collection} of Cards according to Yaniv rules laid out in the
+     * documentation of {@link Card#yanivValue()}
+     * 
+     * @param cards the cards to be tallied
+     * @return the tally
+     */
+    public static int tally(Collection<Card> cards) {
+        int tally = 0;
+
+        for (Card c : cards)
+            tally += c.yanivValue();
+
+        return tally;
     }
 
     public int getPoints(Player p) {

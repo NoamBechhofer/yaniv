@@ -15,6 +15,8 @@ public class Game {
     private Deck deck;
     private Stack<Set<Card>> discardPile; // Each discard is a set. That way we can access any of the cards from the
                                           // previous discard.
+                                          
+    private boolean canSlap;
 
     public Game() {
         this.players = new LockableHashSet<>();
@@ -116,18 +118,21 @@ public class Game {
         return this.deck.removeTopCard();
     }
 
-
-    // how can I accomplish this? I need to enforce that this only succeeds if the next player hasn't gone yet.
     /**
-     * Attempt to slap down the {@link Card} which was just drawn. Only valid if the
-     * card was drawn from the deck, not the discord pile. Successfull only if
-     * performed before the next player's turn.
+     * Attempt to slap down the {@link Card} which was just drawn. Only call if the
+     * card was drawn from the deck, not the discard pile. Successful only if
+     * performed before the next player's turn. Caller should only remove the Card
+     * from their hand if this returns true.
      * 
      * @param c the card to slap down
      * @return true if the slap down was succesful
      */
     public boolean slapDown(Card c) {
-        throw new UnsupportedOperationException("Unimplemented method 'slapDown'");
+        if (!canSlap)
+            return false;
+
+        this.discardPile.peek().add(c);
+        return true;
     }
 
     /**

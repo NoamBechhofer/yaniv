@@ -40,7 +40,10 @@ public interface Player {
      */
     public int points();
 
-    public void giveStartingHand(Set<Card> hand);
-
+    /**
+     * Dealer calls this to deal a Card to this Player's hand
+     * 
+     * @param c card to be added
+     */
     public void dealToHand(Card c);
 }

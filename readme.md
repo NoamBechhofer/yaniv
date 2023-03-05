@@ -19,7 +19,7 @@ If other players at the table have a score that is lower than or equal to the pl
 If you discard one or more cards of the same rank and draw a card of that same rank from the deck, you may "slap down" that card until the next person has discarded or called yaniv. You may not slap down the continuation of a straight flush or if you drew the card from the discard pile.
 
 ## Scoring
-At the end of each round, players who have not called "yaniv" tally their points as follows: Aces through tens count as 1 - 10 points respectively. Royal cards all count as 10 points. They then add the tally to their totals. If this brings their total over 200, they lose and exit the game.  
+At the end of each round, all players beside the one who called "yaniv" tally their points as follows: Jokers count as 0. Aces through tens count as 1 - 10 points respectively. Royal cards all count as 10 points. They then add the tally to their totals. If this brings their total over 200, they lose and exit the game.  
 If a player has called "yaniv" and nobody has called "assaf," they do not tally their points, gaining 0 points.  
 If a player has called "yaniv" and been "assaf"ed, they tally their total and add 30.
 

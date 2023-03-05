@@ -38,16 +38,14 @@ public class Game {
             return false;
         if (cards.size() == 1)
             return true;
-
-        
-    
+           
         boolean sameRank = Card.sameRank(cards);
 
         boolean size = cards.size() >= 3;
         boolean suit = Card.sameSuit(cards);
         boolean straight = Card.isStraight(cards);
 
-        if (sameRank || size && suit && straight )
+        if (sameRank || size && suit && straight)
             return true;
         return false;
     }
@@ -55,30 +53,7 @@ public class Game {
     public Set<Card> peekDiscardPile() {
         return this.discardPile.peek();
     }
-
-    /**
-     * Call this method to receive the Player's starting hand.
-     * 
-     * @return this player's starting hand.
-     * @throws PlayerRefusalException if there are too many players
-     */
-    public Set<Card> initializePlayer(Player p){
-        assert !players.contains(p) : "duplicate player!!";
-
-        if (players.size() >= YanivProperties.MAX_PLAYERS)
-            throw new RuntimeException("too many players");
-
-        this.players.add(p);
-
-        Set<Card> hand = new HashSet<>();
-        for (int i = 0; i < YanivProperties.NUM_STARTING_CARDS; i++) {
-            Card tmp = this.deck.removeTopCard();
-            boolean added = hand.add(tmp);
-            assert added : tmp;
-        }
-        return hand;
-    }
-
+    
     /**
      * Draw from the discard pile.
      * 

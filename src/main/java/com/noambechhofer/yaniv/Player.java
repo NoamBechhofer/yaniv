@@ -5,7 +5,7 @@ import java.util.Collection;
 public interface Player {
     /**
      * Used by the Dealer to signal that the round has ended. The Player should
-     * {@link Game#tally(Collection)} their points and add their score. Will not be
+     * {@link Dealer#tally(Collection)} their points and add their score. Will not be
      * sent to the player who called Yaniv.
      */
     public void endRound();
@@ -26,8 +26,8 @@ public interface Player {
     public Collection<Card> peekHand();
 
     /**
-     * Make a move. The contract is that the Player will call {@link Game#drawFromDiscard()} or
-     * {@link Game#drawFromDeck()}
+     * Make a move. The contract is that the Player will call {@link Dealer#drawFromDiscard()} or
+     * {@link Dealer#drawFromDeck()}
      */
     public void doTurn();
 

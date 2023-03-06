@@ -1,5 +1,8 @@
 package com.noambechhofer.yaniv;
 
+/**
+ * Using this in place of a config for now
+ */
 public class YanivProperties {
     /** path to folder containing resources for yaniv */
     public static final String RESOURCES_PATH = "C:\\Users\\noamb\\OneDrive\\Programming\\yaniv\\src\\main\\resources\\";

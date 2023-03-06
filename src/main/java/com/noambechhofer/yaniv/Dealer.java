@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
+/** The Dealer manages and runs the game. */
 public class Dealer {
 
     /** players in the game. */

@@ -32,7 +32,7 @@
       <version>1.35</version>
   </dependency>
     <!-- openimaj-->
-    <dependency>
+    <!-- <dependency>
       <groupId>org.openimaj</groupId>
       <artifactId>audio-processing</artifactId>
       <version>${openimaj.version}</version>
@@ -115,7 +115,7 @@
       <artifactId>common-stream</artifactId>
       <version>${openimaj.version}</version>
       <scope>compile</scope>
-    </dependency>
+    </dependency> -->
     <!-- <dependency>
 			<groupId>org.openimaj</groupId>
 			<artifactId>core-web</artifactId>

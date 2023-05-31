@@ -1,14 +1,14 @@
 package com.noambechhofer.yaniv;
 
+import java.awt.Color;
+import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.awt.Color;
 
-import org.openimaj.image.ImageUtilities;
-import org.openimaj.image.MBFImage;
+import javax.imageio.ImageIO;
 
 /**
  * A playing card.
@@ -28,17 +28,22 @@ public class Card implements Comparable<Card> {
     }
 
     /**
-     * Rank.
-     * 
-     * See class documentation for encoding format.
+     * This card's rank
      */
     private Rank rank;
     /**
-     * Suit.
-     * 
-     * See class documentation for encoding format.
+     * This card's suit
      */
     private Suit suit;
+    /**
+     * if {@code true}, draw the face of the card. If {@code false}, draw the back
+     * of the card. New instances start face down.
+     */
+    private boolean faceUp;
+    /** This card's face */
+    private Image face;
+    /** This card's back */
+    private Image back;
 
     /**
      * Instantiate a Card
@@ -55,10 +60,33 @@ public class Card implements Comparable<Card> {
             throw new RuntimeException("bad joker construction");
         this.rank = rank;
         this.suit = suit;
+
+        String faceImagePath = YanivProperties.RESOURCES_PATH + "cards\\" + this.rank + "_" + this.suit + ".png";
+        String backImagePath = YanivProperties.RESOURCES_PATH + "cards\\cardback.png";
+
+        File faceImageFile = new File(faceImagePath);
+        File backImageFile = new File(backImagePath);
+
+        try {
+            this.face = ImageIO.read(faceImageFile);
+            this.back = ImageIO.read(backImageFile);
+        } catch (IOException e) {
+            System.err.println("Error occured while reading image, or not able to create required ImageInputStream");
+            System.exit(1);
+        }
+
+        this.faceUp = false;
     }
 
     /**
-     * Accessor method
+     * Flip this card between face up and face down
+     */
+    public void flip() {
+        faceUp = !faceUp;
+    }
+
+    /**
+     * Returns the rank of this card.
      * 
      * @return the rank of this card.
      */
@@ -67,7 +95,7 @@ public class Card implements Comparable<Card> {
     }
 
     /**
-     * Accessor method
+     * Returns the suit of this card.
      * 
      * @return the suit of this card.
      */
@@ -99,6 +127,61 @@ public class Card implements Comparable<Card> {
         if (obj instanceof Card)
             return obj != null && this.rank == ((Card) obj).rank() && this.suit == ((Card) obj).suit();
         return super.equals(obj);
+    }
+
+    public Image toImage() {
+        if (faceUp)
+            return face;
+        else
+            return back;
+    }
+
+    /**
+     * Returns the unicode representation of this card as a hex number
+     * 
+     * @return the unicode representation of this card as a hex number
+     */
+    public int toUnicodeCodePoint() {
+        if (this.isJoker())
+            if (this.suit == Suit.HEARTS)
+                return 0x1F0BF;
+            else if (this.suit == Suit.SPADES)
+                return 0x1F0CF;
+            else
+                throw new AssertionError("Invalid Joker encoding");
+        else {
+            int suitPart = 0;
+            switch (this.suit) {
+                case CLUBS:
+                    suitPart = 0x1F0D0;
+                    break;
+                case DIAMONDS:
+                    suitPart = 0x1F0C0;
+                    break;
+                case HEARTS:
+                    suitPart = 0x1F0B0;
+                    break;
+                case SPADES:
+                    suitPart = 0x1F0A0;
+                    break;
+                default:
+                    assert false : this;
+            }
+
+            int rankPart = 0;
+            switch (this.rank) {
+                case KING:
+                case QUEEN:
+                    // there's a "knight" card in the full unicode deck which needs to be skipped
+                    rankPart = this.rank.asInt() + 1;
+                    break;
+                default:
+                    rankPart = this.rank.asInt();
+            }
+
+            return suitPart | rankPart;
+        }
+
     }
 
     /**
@@ -140,10 +223,10 @@ public class Card implements Comparable<Card> {
      * <p>
      * The rules for this value are:
      * <ul>
-     *     <li> Jokers are worth 0 points </li>
-     *     <li> Aces are worth 1 point </li>
-     *     <li> 2 - 10 are worht their respective ranks </li>
-     *     <li> royals are worth 10 points </li>
+     * <li>Jokers are worth 0 points</li>
+     * <li>Aces are worth 1 point</li>
+     * <li>2 - 10 are worht their respective ranks</li>
+     * <li>royals are worth 10 points</li>
      * </ul>
      * 
      * @return the value of this Card to be used when tallying points
@@ -159,29 +242,6 @@ public class Card implements Comparable<Card> {
             default:
                 return this.rank.asInt();
         }
-    }
-
-    /**
-     * Returns an image of this Card
-     * <p>
-     * Images from https://code.google.com/archive/p/vector-playing-cards/
-     * 
-     * @return an image of this Card
-     */
-    public MBFImage toImage() {
-        String imagePath = YanivProperties.RESOURCES_PATH + "cards\\" + this.rank + "_" + this.suit + ".png";
-        File imageFile = new File(imagePath);
-
-        MBFImage image = null;
-        try {
-            image = ImageUtilities.readMBF(imageFile);
-        } catch (IOException e) {
-            System.err.println("Could not find image at " + imagePath); // TODO log properly
-            e.printStackTrace(System.err);
-            System.exit(1);
-        }
-
-        return image;
     }
 
     /**

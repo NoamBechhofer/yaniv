@@ -126,8 +126,8 @@
       <artifactId>common-stream</artifactId>
       <version>${openimaj.version}</version>
       <scope>compile</scope>
-    </dependency> -->
-    <!-- <dependency>
+    </dependency>
+    <dependency>
 			<groupId>org.openimaj</groupId>
 			<artifactId>core-web</artifactId>
 			<version>${openimaj.version}</version>

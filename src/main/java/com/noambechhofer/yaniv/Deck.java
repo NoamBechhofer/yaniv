@@ -4,7 +4,7 @@ import java.util.Random;
 import java.util.Stack;
 
 /**
- * A deck of cards. Note that cards can be removed or added to the deck.
+ * A deck of {@link Card}s. Note that cards can be removed or added to the deck.
  */
 public class Deck {
     static {

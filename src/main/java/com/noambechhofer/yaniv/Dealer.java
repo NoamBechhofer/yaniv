@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
-// TODO: rename Dealer
-public class Game {
+/** The Dealer manages and runs the game. */
+public class Dealer {
 
     /** players in the game. */
     private List<Player> players;
@@ -21,7 +21,7 @@ public class Game {
     private boolean yaniv;
     private boolean canSlap;
 
-    public Game() {
+    public Dealer() {
         this.players = new LinkedList<>();
 
         this.deck = new Deck();
@@ -73,23 +73,47 @@ public class Game {
                 if (p != curr)
                     p.endRound();
 
+            boolean atLeastOneLeft = false;
             for (Player p : players)
-                if (p.points() > YanivProperties.LOSING_THRESHOLD) {
-                    Player next = null;
-                    if (p == curr)
-                        if (itr.hasNext())
-                            next = itr.next();
-                        else
-                            next = players.get(0);
-                    else
-                        next = curr;
-                    players.remove(p);
-
-                    // We've modified players so we need a new iterator
-                    itr = players.iterator();
-                    while (next != itr.next())
-                        ;
+                if (p.score() < YanivProperties.LOSING_THRESHOLD)
+                    atLeastOneLeft = true;
+            // may happen if all players go above the losing threshold in the round:
+            if (!atLeastOneLeft) {
+                Player winner = players.get(0);
+                for (int i = 1; i < players.size(); i++) {
+                    Player tmp = players.get(i);
+                    if (tmp.score() < winner.score()) {
+                        winner = tmp;
+                        for (Player p : players) {
+                            if (p != tmp)
+                                players.remove(p);
+                        }
+                        continue;
+                    }
                 }
+            } else {
+                for (Player p : players) {
+                    if (p.score() > YanivProperties.LOSING_THRESHOLD) {
+                        Player next = null;
+                        if (p == curr) {
+                            if (itr.hasNext()) {
+                                next = itr.next();
+                            } else {
+                                next = players.get(0);
+                            }
+                        } else {
+                            next = curr;
+                        }
+                        players.remove(p);
+
+                        // We've modified players so we need a new iterator
+                        itr = players.iterator();
+                        while (next != itr.next()) {
+                            ;
+                        }
+                    }
+                }
+            }
         }
 
     }
@@ -100,7 +124,8 @@ public class Game {
      * method had been called.
      * 
      * @param hand the calling Player's hand
-     * @return true if the call is successful, false if the player is "assaf"ed
+     * @return {@code true} if the call is successful, {@code false} if the player
+     *         is "assaf"ed
      */
     public boolean callYaniv(Collection<Card> hand) {
         this.yaniv = true;
@@ -115,14 +140,14 @@ public class Game {
      * for {@link Set} of size 0.
      * 
      * @param cards set of cards to be checked
-     * @return true if the given set is valid under yaniv rules.
+     * @return {@code true} if the given set is valid under yaniv rules.
      */
     public static boolean validate(Set<Card> cards) {
         if (cards.size() == 0)
             return false;
         if (cards.size() == 1)
             return true;
-           
+
         boolean sameRank = Card.sameRank(cards);
 
         boolean size = cards.size() >= 3;
@@ -134,14 +159,19 @@ public class Game {
         return false;
     }
 
+    /**
+     * Look at, but do not remove, the top {@link Set} of {@link Card}s on the
+     * discard pile.
+     * 
+     * @return the top {@link Set} of {@link Card}s on the discard pile.
+     */
     public Set<Card> peekDiscardPile() {
         return this.discardPile.peek();
     }
 
+    // TODO: enforce rules about ends of a straight with a checked exception
     /**
      * Draw from the discard pile.
-     * 
-     * TODO: assert rules about ends of a straight
      * 
      * @param c     the Card to be removed. Must be part of the previous player's
      *              discard.

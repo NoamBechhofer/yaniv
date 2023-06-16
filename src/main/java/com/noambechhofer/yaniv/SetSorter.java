@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+/** Utility for processing {@link Set}s when you need some sort of order out of them */
 public class SetSorter {
     /**
      * Convert a {@link Set} into a sorted {@link List}

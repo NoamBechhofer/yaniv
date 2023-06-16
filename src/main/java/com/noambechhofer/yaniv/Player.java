@@ -2,10 +2,15 @@ package com.noambechhofer.yaniv;
 
 import java.util.Collection;
 
+/**
+ * a yaniv Player. This interface constitutes any Player's contract with the
+ * {@link Dealer}.
+ */
 public interface Player {
     /**
      * Used by the Dealer to signal that the round has ended. The Player should
-     * {@link Game#tally(Collection)} their points and add their score. Will not be
+     * {@link Dealer#tally(Collection)} their points and add their score. Will not
+     * be
      * sent to the player who called Yaniv.
      */
     public void endRound();
@@ -26,8 +31,9 @@ public interface Player {
     public Collection<Card> peekHand();
 
     /**
-     * Make a move. The contract is that the Player will call drawFromDiscard() or
-     * drawFromDeck()
+     * Make a move. The contract is that the Player will call
+     * {@link Dealer#drawFromDiscard(Card, java.util.Set)} or
+     * {@link Dealer#drawFromDeck(java.util.Set)}
      */
     public void doTurn();
 
@@ -36,7 +42,7 @@ public interface Player {
      * 
      * @return this Player's points
      */
-    public int points();
+    public int score();
 
     /**
      * Dealer calls this to deal a Card to this Player's hand

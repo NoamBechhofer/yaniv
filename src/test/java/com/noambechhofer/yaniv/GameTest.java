@@ -27,7 +27,7 @@ public class GameTest {
                 } catch (RuntimeException e) {
                     continue;
                 }
-                assertTrue(Game.validate(cards));
+                assertTrue(Dealer.validate(cards));
             }
             cards = new HashSet<>();
         }
@@ -40,7 +40,7 @@ public class GameTest {
                 } catch (RuntimeException e) {
                     continue;
                 }
-                assertTrue(Game.validate(cards));
+                assertTrue(Dealer.validate(cards));
             }
             cards = new HashSet<>();
         }
@@ -54,7 +54,7 @@ public class GameTest {
                 } catch (RuntimeException e) {
                     continue;
                 }
-                assertTrue(Game.validate(cards));
+                assertTrue(Dealer.validate(cards));
             }
             cards = new HashSet<>();
         }
@@ -64,7 +64,7 @@ public class GameTest {
         cards.add(new Card(Rank.TWO, Suit.CLUBS));
         cards.add(new Card(Rank.THREE, Suit.CLUBS));
 
-        assertFalse(Game.validate(cards));
+        assertFalse(Dealer.validate(cards));
 
         cards = new HashSet<>();
 
@@ -74,10 +74,10 @@ public class GameTest {
             Card tmp = new Card(fv, Suit.CLUBS);
             cards.add(tmp);
         }
-        assertTrue(Game.validate(cards));
+        assertTrue(Dealer.validate(cards));
         cards.add(redJoker);
         cards.add(blackJoker);
-        assertTrue(Game.validate(cards));
+        assertTrue(Dealer.validate(cards));
 
         cards.remove(redJoker);
         cards.remove(blackJoker);
@@ -90,7 +90,7 @@ public class GameTest {
             cards.remove(c);
             cards.add(redJoker);
 
-            assertTrue(Game.validate(cards));
+            assertTrue(Dealer.validate(cards));
 
             for (Rank r1 : Rank.values()) {
                 if (r1 == r || r1 == Rank.JOKER)
@@ -100,7 +100,7 @@ public class GameTest {
                 cards.remove(c1);
                 cards.add(blackJoker);
 
-                assertTrue(Game.validate(cards));
+                assertTrue(Dealer.validate(cards));
 
                 cards.remove(blackJoker);
                 cards.add(c1);

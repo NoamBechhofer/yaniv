@@ -116,7 +116,7 @@ public class Card implements Comparable<Card> {
     }
 
     /**
-     * Returns {@code true} if this Card is the same as the obj argument;
+     * Returns {@code true} if this Card is the same as the {@code obj} argument;
      * {@code false} otherwise.
      * <p>
      * Note: this class has a natural ordering that is inconsistent with equals.

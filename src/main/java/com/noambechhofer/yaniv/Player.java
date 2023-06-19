@@ -10,8 +10,7 @@ public interface Player {
     /**
      * Used by the Dealer to signal that the round has ended. The Player should
      * {@link Dealer#tally(Collection)} their points and add their score. Will not
-     * be
-     * sent to the player who called Yaniv.
+     * be sent to the player who called Yaniv.
      */
     public void endRound();
 
@@ -20,15 +19,14 @@ public interface Player {
      * 
      * @return this Player's hand
      */
-    public Collection<Card> removeHand();
+    public Hand removeHand();
 
     /**
-     * Check this Player's hand but do not remove it. It would be good practice to
-     * return an immutable {@link Collection}.
+     * Check this Player's hand but do not remove it.
      * 
      * @return this Player's hand
      */
-    public Collection<Card> peekHand();
+    public Hand peekHand();
 
     /**
      * Make a move. The contract is that the Player will call
@@ -42,7 +40,7 @@ public interface Player {
      * 
      * @return this Player's points
      */
-    public int score();
+    public int getScore();
 
     /**
      * Dealer calls this to deal a Card to this Player's hand

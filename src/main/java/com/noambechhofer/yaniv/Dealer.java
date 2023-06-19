@@ -1,22 +1,27 @@
 package com.noambechhofer.yaniv;
 
+import java.util.ArrayDeque;
 import java.util.Collection;
+import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.Stack;
 
 /** The Dealer manages and runs the game. */
 public class Dealer {
 
+    /**
+     * The minimum number of consecutive cards that is counted as a straight.
+     */
+    private static final int MINIMUM_STRAIGHT_LENGTH = 3;
     /** players in the game. */
     private List<Player> players;
     /** single deck of cards */
     private Deck deck;
     // Each discard is a set. That way we can access any of the cards from the
     // previous discard.
-    private Stack<Set<Card>> discardPile;
+    private Deque<Set<Card>> discardPile;
 
     private boolean yaniv;
     private boolean canSlap;
@@ -27,7 +32,7 @@ public class Dealer {
         this.deck = new Deck();
         this.deck.shuffle();
 
-        this.discardPile = new Stack<>();
+        this.discardPile = new ArrayDeque<>();
 
         this.yaniv = false;
     }
@@ -40,27 +45,32 @@ public class Dealer {
      * @param numPlayers the number of players in the game
      */
     public void play(int numPlayers) {
-        if (numPlayers < YanivProperties.MIN_PLAYERS || numPlayers > YanivProperties.MAX_PLAYERS)
+        if (numPlayers < YanivProperties.MIN_PLAYERS || numPlayers > YanivProperties.MAX_PLAYERS) {
             throw new RuntimeException("invalid number of players " + numPlayers + ". Must be >= "
                     + YanivProperties.MIN_PLAYERS + " and <= " + YanivProperties.MAX_PLAYERS);
+        }
 
         // TODO: replace with listener
-        while (this.players.size() < numPlayers)
+        while (this.players.size() < numPlayers) {
             ;
+        }
 
         while (players.size() > 1) {
             this.deck.shuffle();
 
-            for (int i = 0; i < YanivProperties.NUM_STARTING_CARDS; i++)
-                for (Player p : players)
+            for (int i = 0; i < YanivProperties.NUM_STARTING_CARDS; i++) {
+                for (Player p : players) {
                     p.dealToHand(this.deck.removeTopCard());
+                }
+            }
 
             Iterator<Player> itr = this.players.iterator();
             Player curr = null;
 
             while (!this.yaniv) {
-                if (!itr.hasNext())
+                if (!itr.hasNext()) {
                     itr = this.players.iterator();
+                }
 
                 this.canSlap = true;
                 curr = itr.next();
@@ -69,20 +79,24 @@ public class Dealer {
                                // ! Player to call within their doTurn().
             }
             this.yaniv = false;
-            for (Player p : players)
-                if (p != curr)
+            for (Player p : players) {
+                if (p != curr) {
                     p.endRound();
+                }
+            }
 
             boolean atLeastOneLeft = false;
-            for (Player p : players)
-                if (p.score() < YanivProperties.LOSING_THRESHOLD)
+            for (Player p : players) {
+                if (p.getScore() < YanivProperties.LOSING_THRESHOLD) {
                     atLeastOneLeft = true;
+                }
+            }
             // may happen if all players go above the losing threshold in the round:
             if (!atLeastOneLeft) {
                 Player winner = players.get(0);
                 for (int i = 1; i < players.size(); i++) {
                     Player tmp = players.get(i);
-                    if (tmp.score() < winner.score()) {
+                    if (tmp.getScore() < winner.getScore()) {
                         winner = tmp;
                         for (Player p : players) {
                             if (p != tmp)
@@ -93,7 +107,7 @@ public class Dealer {
                 }
             } else {
                 for (Player p : players) {
-                    if (p.score() > YanivProperties.LOSING_THRESHOLD) {
+                    if (p.getScore() > YanivProperties.LOSING_THRESHOLD) {
                         Player next = null;
                         if (p == curr) {
                             if (itr.hasNext()) {
@@ -142,21 +156,21 @@ public class Dealer {
      * @param cards set of cards to be checked
      * @return {@code true} if the given set is valid under yaniv rules.
      */
-    public static boolean validate(Set<Card> cards) {
-        if (cards.size() == 0)
+    public static boolean isValid(Set<Card> cards) {
+        if (cards.size() == 0) {
             return false;
-        if (cards.size() == 1)
+        }
+        if (cards.size() == 1) {
             return true;
+        }
 
         boolean sameRank = Card.sameRank(cards);
 
-        boolean size = cards.size() >= 3;
+        boolean size = cards.size() >= MINIMUM_STRAIGHT_LENGTH;
         boolean suit = Card.sameSuit(cards);
         boolean straight = Card.isStraight(cards);
 
-        if (sameRank || size && suit && straight)
-            return true;
-        return false;
+        return sameRank || (size && suit && straight);
     }
 
     /**
@@ -179,13 +193,16 @@ public class Dealer {
      * @return the requested Card
      */
     public Card drawFromDiscard(Card c, Set<Card> cards) {
-        assert cards.size() > 0;
-        assert validate(cards);
+        if (cards.isEmpty() || !isValid(cards)) {
+            throw new AssertionError();
+        }
 
         this.canSlap = false;
 
         boolean removed = this.discardPile.peek().remove(c);
-        assert removed : c;
+        if (!removed) {
+            throw new AssertionError();
+        }
 
         this.discardPile.push(cards);
 
@@ -200,8 +217,9 @@ public class Dealer {
      * @return the top card on the deck
      */
     public Card drawFromDeck(Set<Card> cards) {
-        assert cards.size() > 0;
-        assert validate(cards);
+        if (cards.isEmpty() || !isValid(cards)) {
+            throw new AssertionError("Players should not have the ability to discard an invalid set of cards.");
+        }
 
         this.canSlap = false;
 
@@ -220,8 +238,9 @@ public class Dealer {
      * @return true if the slap down was succesful
      */
     public boolean slapDown(Card c) {
-        if (!canSlap)
+        if (!canSlap) {
             return false;
+        }
 
         this.discardPile.peek().add(c);
         return true;
@@ -237,8 +256,9 @@ public class Dealer {
     public static int tally(Collection<Card> cards) {
         int tally = 0;
 
-        for (Card c : cards)
+        for (Card c : cards) {
             tally += c.yanivValue();
+        }
 
         return tally;
     }

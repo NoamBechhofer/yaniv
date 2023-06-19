@@ -20,12 +20,6 @@ import javax.imageio.ImageIO;
  * Note: this class has a natural ordering that is inconsistent with equals.
  */
 public class Card implements Comparable<Card> {
-    static {
-        boolean assertsEnabled = false;
-        assert assertsEnabled = true; // Intentional side effect!!!
-        if (!assertsEnabled)
-            throw new RuntimeException("Asserts must be enabled!!!");
-    }
 
     /**
      * This card's rank
@@ -57,7 +51,7 @@ public class Card implements Comparable<Card> {
      */
     public Card(Rank rank, Suit suit) {
         if (rank == Rank.JOKER && (suit != Suit.HEARTS && suit != Suit.SPADES))
-            throw new RuntimeException("bad joker construction");
+            throw new CardConstructionException("bad joker construction");
         this.rank = rank;
         this.suit = suit;
 
@@ -125,7 +119,7 @@ public class Card implements Comparable<Card> {
      */
     public boolean equals(Object obj) {
         if (obj instanceof Card)
-            return obj != null && this.rank == ((Card) obj).rank() && this.suit == ((Card) obj).suit();
+            return this.rank == ((Card) obj).rank() && this.suit == ((Card) obj).suit();
         return super.equals(obj);
     }
 
@@ -142,14 +136,15 @@ public class Card implements Comparable<Card> {
      * @return the unicode representation of this card as a hex number
      */
     public int toUnicodeCodePoint() {
-        if (this.isJoker())
-            if (this.suit == Suit.HEARTS)
+        if (this.isJoker()) {
+            if (this.suit == Suit.HEARTS) {
                 return 0x1F0BF;
-            else if (this.suit == Suit.SPADES)
+            } else if (this.suit == Suit.SPADES) {
                 return 0x1F0CF;
-            else
+            } else {
                 throw new AssertionError("Invalid Joker encoding");
-        else {
+            }
+        } else {
             int suitPart = 0;
             switch (this.suit) {
                 case CLUBS:
@@ -191,13 +186,15 @@ public class Card implements Comparable<Card> {
      */
     @Override
     public String toString() {
-        if (this.isJoker())
-            if (this.suit == Suit.HEARTS)
+        if (this.isJoker()) {
+            if (this.suit == Suit.HEARTS) {
                 return "Red Joker";
-            else if (this.suit == Suit.SPADES)
+            } else if (this.suit == Suit.SPADES) {
                 return "Black Joker";
-            else
+            } else {
                 throw new AssertionError("Invalid Joker encoding");
+            }
+        }
         return String.format("%s of %s", rank, suit);
     }
 
@@ -396,10 +393,10 @@ enum Rank {
     /**
      * numerical representation of this Rank. Useful for determining straights.
      */
-    private int rank;
+    private int value;
 
     Rank(int rank) {
-        this.rank = rank;
+        this.value = rank;
     }
 
     /**
@@ -409,6 +406,12 @@ enum Rank {
      * @return a numerical representation of this Rank
      */
     public int asInt() {
-        return this.rank;
+        return this.value;
+    }
+}
+
+class CardConstructionException extends RuntimeException {
+    public CardConstructionException(String string) {
+        super(string);
     }
 }

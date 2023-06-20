@@ -143,9 +143,11 @@ public class Dealer {
      */
     public boolean callYaniv(Collection<Card> hand) {
         this.yaniv = true;
-        for (Player p : this.players)
-            if (tally(p.peekHand()) <= tally(hand))
+        for (Player p : this.players) {
+            if (tally(p.peekHand()) <= tally(hand)) {
                 return false;
+            }
+        }
         return true;
     }
 
@@ -336,7 +338,7 @@ class PlayerList implements Publisher<Player>, Iterable<Player> {
         if (!players.remove(p)) {
             return false;
         }
-        
+
         for (Subscriber<? super Player> s : subscribers) {
             s.onNext(p);
         }

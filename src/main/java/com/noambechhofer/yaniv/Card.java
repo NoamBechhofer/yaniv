@@ -51,8 +51,9 @@ public class Card implements Comparable<Card> {
      * @throws RuntimeException if a joker is constructed with the wrong suit
      */
     public Card(Rank rank, Suit suit) {
-        if (rank == Rank.JOKER && (suit != Suit.HEARTS && suit != Suit.SPADES))
+        if (rank == Rank.JOKER && (suit != Suit.HEARTS && suit != Suit.SPADES)) {
             throw new CardConstructionException("bad joker construction");
+        }
         this.rank = rank;
         this.suit = suit;
 
@@ -119,16 +120,18 @@ public class Card implements Comparable<Card> {
      * @return true if this object is the same as the obj argument; false otherwise.
      */
     public boolean equals(Object obj) {
-        if (obj instanceof Card)
+        if (obj instanceof Card) {
             return this.rank == ((Card) obj).rank() && this.suit == ((Card) obj).suit();
+        }
         return super.equals(obj);
     }
 
     public Image toImage() {
-        if (faceUp)
+        if (faceUp) {
             return face;
-        else
+        } else {
             return back;
+        }
     }
 
     /**
@@ -231,6 +234,7 @@ public class Card implements Comparable<Card> {
      * 
      * @see Dealer#tally
      */
+    @SuppressWarnings("java:S109") // magic numbers are fine here
     public int yanivValue() {
         switch (this.rank) {
             case JOKER:
@@ -261,18 +265,19 @@ public class Card implements Comparable<Card> {
      * @return true if the set constitutes a straight
      */
     public static boolean isStraight(Set<Card> cards) {
-        if (cards.size() == 0 || cards.size() > Rank.values().length + 1)
+        if (cards.isEmpty() || cards.size() > Rank.values().length + 1) {
             return false;
+        }
 
-        int numJokers;
-        Card redJoker = new Card(Rank.JOKER, Suit.HEARTS);
+        int numJokers = 0;
         Card blackJoker = new Card(Rank.JOKER, Suit.SPADES);
-        if (cards.contains(redJoker) && cards.contains(blackJoker))
-            numJokers = 2;
-        else if (cards.contains(redJoker) || cards.contains(blackJoker))
-            numJokers = 1;
-        else
-            numJokers = 0;
+        if (cards.contains(blackJoker)) {
+            numJokers++;
+        }
+        Card redJoker = new Card(Rank.JOKER, Suit.HEARTS);
+        if (cards.contains(redJoker)) {
+            numJokers++;
+        }
 
         List<Card> cardsList = SetSorter.sort(cards);
 
@@ -283,8 +288,9 @@ public class Card implements Comparable<Card> {
             Card next = itr.next();
 
             if (!curr.isJoker() && (curr.rank().asInt() + 1) != next.rank().asInt() && !next.isJoker()
-                    && numJokers-- < 1)
+                    && numJokers-- < 1) {
                 return false;
+            }
 
             curr = next;
         }
@@ -300,8 +306,9 @@ public class Card implements Comparable<Card> {
      * @return true if all the cards share the same suit.
      */
     public static boolean sameSuit(Set<Card> cards) {
-        if (cards.size() == 0 || cards.size() > Rank.values().length + 1) // + 1 for the 2nd joker
+        if (cards.isEmpty() || cards.size() > Rank.values().length + 1) { // + 1 for the 2nd joker
             return false;
+        }
 
         // don't wanna start with a joker so we sort
         List<Card> cardsList = SetSorter.sort(cards);
@@ -311,8 +318,9 @@ public class Card implements Comparable<Card> {
 
         while (itr.hasNext()) {
             Card next = itr.next();
-            if (next.suit() != suit && !next.isJoker())
+            if (next.suit() != suit && !next.isJoker()) {
                 return false;
+            }
         }
 
         return true;
@@ -327,8 +335,9 @@ public class Card implements Comparable<Card> {
      * @return true if all the cards share the same face rank
      */
     public static boolean sameRank(Set<Card> cards) {
-        if (cards.size() == 0 || cards.size() > Suit.values().length + 2) // + 2 for jokers
+        if (cards.isEmpty() || cards.size() > Suit.values().length + Rank.NUM_JOKERS) {
             return false;
+        }
 
         // don't wanna start with a joker so we sort
         List<Card> cardsList = SetSorter.sort(cards);
@@ -338,8 +347,9 @@ public class Card implements Comparable<Card> {
 
         while (itr.hasNext()) {
             Card next = itr.next();
-            if (next.rank() != rank && !next.isJoker())
+            if (next.rank() != rank && !next.isJoker()) {
                 return false;
+            }
         }
 
         return true;

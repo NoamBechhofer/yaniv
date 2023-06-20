@@ -6,10 +6,13 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
 import com.noambechhofer.yaniv.Utilities.SetSorter;
+import com.noambechhofer.yaniv.Utilities.SingletonLogger;
 
 /**
  * A playing card.
@@ -21,6 +24,8 @@ import com.noambechhofer.yaniv.Utilities.SetSorter;
  * Note: this class has a natural ordering that is inconsistent with equals.
  */
 public class Card implements Comparable<Card> {
+
+    private static final Logger LOGGER = SingletonLogger.getLogger();
 
     /**
      * This card's rank
@@ -51,6 +56,7 @@ public class Card implements Comparable<Card> {
      * @throws RuntimeException if a joker is constructed with the wrong suit
      */
     public Card(Rank rank, Suit suit) {
+
         if (rank == Rank.JOKER && (suit != Suit.HEARTS && suit != Suit.SPADES)) {
             throw new CardConstructionException("bad joker construction");
         }
@@ -67,11 +73,13 @@ public class Card implements Comparable<Card> {
             this.face = ImageIO.read(faceImageFile);
             this.back = ImageIO.read(backImageFile);
         } catch (IOException e) {
-            System.err.println("Error occured while reading image, or not able to create required ImageInputStream");
-            System.exit(1);
+            String errMessage = "Error occured while reading image, or not able to create required ImageInputStream.";
+            LOGGER.log(Level.SEVERE, errMessage, e);
+            throw new CardConstructionException(errMessage + " See log for details.");
         }
 
         this.faceUp = false;
+
     }
 
     /**

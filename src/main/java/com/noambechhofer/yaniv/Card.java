@@ -10,6 +10,8 @@ import java.util.Set;
 
 import javax.imageio.ImageIO;
 
+import com.noambechhofer.yaniv.Utilities.SetSorter;
+
 /**
  * A playing card.
  * 
@@ -222,11 +224,13 @@ public class Card implements Comparable<Card> {
      * <ul>
      * <li>Jokers are worth 0 points</li>
      * <li>Aces are worth 1 point</li>
-     * <li>2 - 10 are worht their respective ranks</li>
+     * <li>2 - 10 are worth their respective ranks</li>
      * <li>royals are worth 10 points</li>
      * </ul>
      * 
      * @return the value of this Card to be used when tallying points
+     * 
+     * @see Dealer#tally
      */
     public int yanivValue() {
         switch (this.rank) {

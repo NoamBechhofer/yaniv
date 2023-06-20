@@ -263,3 +263,87 @@ public class Dealer {
         return tally;
     }
 }
+
+class PlayerList implements Publisher<Player>, Iterable<Player> {
+    private List<Subscriber<? super Player>> subscribers;
+    private List<Player> players;
+
+    private Dealer dealer;
+
+    public PlayerList(Dealer dealer) {
+        this.subscribers = new ArrayList<>();
+        this.players = new ArrayList<>();
+
+        this.dealer = dealer;
+    }
+
+    public int size() {
+        return players.size();
+    }
+
+    /**
+     * Returns the Dealer associated with this PlayerList
+     * 
+     * @return the Dealer associated with this PlayerList
+     */
+    public Dealer getDealer() {
+        return dealer;
+    }
+
+    /**
+     * Called by {@code p} to join the game. Returns {@code true} if the player
+     * joined successfully
+     * 
+     * @param p the {@link Player} that wishes to join
+     * @return {@code true} if the player joined successfully, {@code false}
+     *         otherwise (too many players, etc.)
+     */
+    public boolean join(Player p) {
+        if (players.size() >= YanivProperties.MAX_PLAYERS) {
+            return false;
+        }
+
+        boolean added = players.add(p);
+        if (!added) {
+            return false;
+        }
+
+        for (Subscriber<? super Player> s : subscribers) {
+            s.onNext(p);
+        }
+
+        return true;
+    }
+
+    /**
+     * The contract of subscribing is that onNext will be called alternately when a
+     * Player joins or is removed from the game.
+     */
+    @Override
+    public void subscribe(Subscriber<? super Player> subscriber) {
+        subscribers.add(subscriber);
+    }
+
+    @Override
+    public Iterator<Player> iterator() {
+        return players.iterator();
+    }
+
+    /**
+     * Remove the given Player from the game
+     */
+    public boolean remove(Player p) {
+        if (!players.remove(p)) {
+            return false;
+        }
+        
+        for (Subscriber<? super Player> s : subscribers) {
+            s.onNext(p);
+        }
+        return true;
+    }
+
+    public Player get(int index) {
+        return players.get(index);
+    }
+}

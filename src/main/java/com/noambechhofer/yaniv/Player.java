@@ -12,50 +12,50 @@ public interface Player {
      * {@link Dealer#tally(Collection)} their points and add their score. Will not
      * be sent to the player who called Yaniv.
      */
-    public void endRound();
+    void endRound();
 
     /**
      * Return this Player's hand to the Dealer
      * 
      * @return this Player's hand
      */
-    public Hand removeHand();
+    Hand removeHand();
 
     /**
      * Check this Player's hand but do not remove it.
      * 
      * @return this Player's hand
      */
-    public Hand peekHand();
+    Hand peekHand();
 
     /**
      * Make a move. The contract is that the Player will call
      * {@link Dealer#drawFromDiscard(Card, java.util.Set)} or
      * {@link Dealer#drawFromDeck(java.util.Set)}
      */
-    public void doTurn();
+    void doTurn();
 
     /**
      * Returns this Player's points
      * 
      * @return this Player's points
      */
-    public int getScore();
+    int getScore();
 
     /**
      * Dealer calls this to deal a Card to this Player's hand
      * 
      * @param c card to be added
      */
-    public void dealToHand(Card c);
+    void dealToHand(Card c);
 
     /**
      * Called when this player wins
      */
-    public void onWin();
+    void onWin();
 
     /**
      * Called when this player loses
      */
-    public void onLoss();
+    void onLoss();
 }

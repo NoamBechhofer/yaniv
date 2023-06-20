@@ -48,4 +48,14 @@ public interface Player {
      * @param c card to be added
      */
     public void dealToHand(Card c);
+
+    /**
+     * Called when this player wins
+     */
+    public void onWin();
+
+    /**
+     * Called when this player loses
+     */
+    public void onLoss();
 }

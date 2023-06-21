@@ -1,7 +1,6 @@
 package com.noambechhofer.yaniv;
 
 import java.awt.BorderLayout;
-import java.awt.Frame;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +8,6 @@ import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 import org.junit.Test;
 
@@ -18,6 +16,7 @@ import com.noambechhofer.yaniv.cards.Rank;
 import com.noambechhofer.yaniv.cards.Suit;
 
 public class CardTest {
+    @SuppressWarnings("java:S2699") // this is a visual inspection test, not an assertion test
     @Test
     public void testToUnicodeCodePoint() {
         List<Card> cards = new ArrayList<>(54);
@@ -35,6 +34,13 @@ public class CardTest {
             System.out.printf("%d: %s = %X\n", i++, c, c.toUnicodeCodePoint());
     }
 
+    /*
+     * SuppressWarnings rationale:
+     * S2699: this is a visual inspection test, not an assertion test
+     * S2925: the sleep is to visually inspect the cards, not wait for execution to
+     * complete
+     */
+    @SuppressWarnings({ "java:S2699", "java:S2925" })
     @Test
     public void testToImage() throws InterruptedException {
         List<Card> cards = new ArrayList<>(54);
@@ -71,7 +77,7 @@ public class CardTest {
 
             Thread.sleep(500);
         }
-        
+
         // now test the cardback
 
         Card c = cards.get(0);

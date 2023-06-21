@@ -1,10 +1,13 @@
-package com.noambechhofer.yaniv;
+package com.noambechhofer.yaniv.cards;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+
+import com.noambechhofer.yaniv.YanivProperties;
 
 /**
  * A Player's hand. This class is a wrapper around a {@link java.util.Set} of
@@ -13,7 +16,7 @@ import java.util.ListIterator;
 public class Hand implements List<Card> {
     public static final int MAX_HAND_SIZE = YanivProperties.NUM_STARTING_CARDS;
 
-    private List<Card> cards;
+    private List<Card> cards = new ArrayList<>();
 
     public void sortHand() {
         Collections.sort(cards);

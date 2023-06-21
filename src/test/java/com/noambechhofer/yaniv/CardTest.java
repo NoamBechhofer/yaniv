@@ -13,6 +13,10 @@ import javax.swing.JPanel;
 
 import org.junit.Test;
 
+import com.noambechhofer.yaniv.cards.Card;
+import com.noambechhofer.yaniv.cards.Rank;
+import com.noambechhofer.yaniv.cards.Suit;
+
 public class CardTest {
     @Test
     public void testToUnicodeCodePoint() {

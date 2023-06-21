@@ -1,4 +1,4 @@
-package com.noambechhofer.yaniv;
+package com.noambechhofer.yaniv.cards;
 
 import java.awt.Image;
 import java.io.File;
@@ -11,8 +11,10 @@ import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
-import com.noambechhofer.yaniv.Utilities.SetSorter;
-import com.noambechhofer.yaniv.Utilities.SingletonLogger;
+import com.noambechhofer.yaniv.Dealer;
+import com.noambechhofer.yaniv.YanivProperties;
+import com.noambechhofer.yaniv.utilities.SetSorter;
+import com.noambechhofer.yaniv.utilities.SingletonLogger;
 
 /**
  * A playing card.
@@ -89,6 +91,7 @@ public class Card implements Comparable<Card> {
         faceUp = !faceUp;
     }
 
+    // TODO: rename getRank()
     /**
      * Returns the rank of this card.
      * 
@@ -98,6 +101,7 @@ public class Card implements Comparable<Card> {
         return this.rank;
     }
 
+    // TODO: rename getSuit()
     /**
      * Returns the suit of this card.
      * 
@@ -267,13 +271,14 @@ public class Card implements Comparable<Card> {
 
     /**
      * Check whether a {@link Set} of cards constitute a straight, i.e. with Jokers
-     * as wild cards, whether it is a sequence of conecutive ranks
+     * as wild cards, whether it is a sequence of consecutive ranks. A single card
+     * counts as a straight.
      * 
      * @param cards set of cards to be checked
      * @return true if the set constitutes a straight
      */
     public static boolean isStraight(Set<Card> cards) {
-        if (cards.isEmpty() || cards.size() > Rank.values().length + 1) {
+        if (cards.isEmpty() || cards.size() > Rank.values().length + 1) { // +1 for the 2nd joker
             return false;
         }
 
@@ -295,6 +300,7 @@ public class Card implements Comparable<Card> {
         while (itr.hasNext()) {
             Card next = itr.next();
 
+            // TODO: check logic here
             if (!curr.isJoker() && (curr.rank().asInt() + 1) != next.rank().asInt() && !next.isJoker()
                     && numJokers-- < 1) {
                 return false;
@@ -343,7 +349,7 @@ public class Card implements Comparable<Card> {
      * @return true if all the cards share the same face rank
      */
     public static boolean sameRank(Set<Card> cards) {
-        if (cards.isEmpty() || cards.size() > Suit.values().length + Rank.NUM_JOKERS) {
+        if (cards.isEmpty() || cards.size() > Suit.values().length + Deck.NUM_JOKERS) {
             return false;
         }
 

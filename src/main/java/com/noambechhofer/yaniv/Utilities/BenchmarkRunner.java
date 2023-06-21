@@ -1,4 +1,4 @@
-package com.noambechhofer.yaniv;
+package com.noambechhofer.yaniv.utilities;
 
 /** run benchmarks */
 public class BenchmarkRunner {

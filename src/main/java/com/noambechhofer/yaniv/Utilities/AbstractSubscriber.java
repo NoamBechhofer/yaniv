@@ -1,4 +1,4 @@
-package com.noambechhofer.yaniv.Utilities;
+package com.noambechhofer.yaniv.utilities;
 
 import java.util.concurrent.Flow.Subscriber;
 import java.util.concurrent.Flow.Subscription;

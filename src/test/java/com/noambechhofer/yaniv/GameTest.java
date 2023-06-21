@@ -2,6 +2,10 @@ package com.noambechhofer.yaniv;
 
 import org.junit.Test;
 
+import com.noambechhofer.yaniv.cards.Card;
+import com.noambechhofer.yaniv.cards.Rank;
+import com.noambechhofer.yaniv.cards.Suit;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -27,7 +31,7 @@ public class GameTest {
                 } catch (RuntimeException e) {
                     continue;
                 }
-                assertTrue(Dealer.isValid(cards));
+                assertTrue(Dealer.isValidCardSet(cards));
             }
             cards = new HashSet<>();
         }
@@ -40,7 +44,7 @@ public class GameTest {
                 } catch (RuntimeException e) {
                     continue;
                 }
-                assertTrue(Dealer.isValid(cards));
+                assertTrue(Dealer.isValidCardSet(cards));
             }
             cards = new HashSet<>();
         }
@@ -54,7 +58,7 @@ public class GameTest {
                 } catch (RuntimeException e) {
                     continue;
                 }
-                assertTrue(Dealer.isValid(cards));
+                assertTrue(Dealer.isValidCardSet(cards));
             }
             cards = new HashSet<>();
         }
@@ -64,7 +68,7 @@ public class GameTest {
         cards.add(new Card(Rank.TWO, Suit.CLUBS));
         cards.add(new Card(Rank.THREE, Suit.CLUBS));
 
-        assertFalse(Dealer.isValid(cards));
+        assertFalse(Dealer.isValidCardSet(cards));
 
         cards = new HashSet<>();
 
@@ -74,10 +78,10 @@ public class GameTest {
             Card tmp = new Card(fv, Suit.CLUBS);
             cards.add(tmp);
         }
-        assertTrue(Dealer.isValid(cards));
+        assertTrue(Dealer.isValidCardSet(cards));
         cards.add(redJoker);
         cards.add(blackJoker);
-        assertTrue(Dealer.isValid(cards));
+        assertTrue(Dealer.isValidCardSet(cards));
 
         cards.remove(redJoker);
         cards.remove(blackJoker);
@@ -90,7 +94,7 @@ public class GameTest {
             cards.remove(c);
             cards.add(redJoker);
 
-            assertTrue(Dealer.isValid(cards));
+            assertTrue(Dealer.isValidCardSet(cards));
 
             for (Rank r1 : Rank.values()) {
                 if (r1 == r || r1 == Rank.JOKER)
@@ -100,7 +104,7 @@ public class GameTest {
                 cards.remove(c1);
                 cards.add(blackJoker);
 
-                assertTrue(Dealer.isValid(cards));
+                assertTrue(Dealer.isValidCardSet(cards));
 
                 cards.remove(blackJoker);
                 cards.add(c1);

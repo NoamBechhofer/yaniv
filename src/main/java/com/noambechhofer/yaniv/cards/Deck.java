@@ -1,40 +1,41 @@
-package com.noambechhofer.yaniv;
+package com.noambechhofer.yaniv.cards;
 
+import java.util.ArrayList;
 import java.util.Random;
-import java.util.Stack;
 
 /**
  * A deck of {@link Card}s. Note that cards can be removed or added to the deck.
  */
 public class Deck {
-    static {
-        boolean assertsEnabled = false;
-        assert assertsEnabled = true; // Intentional side effect!!!
-        if (!assertsEnabled)
-            throw new RuntimeException("Asserts must be enabled!!!");
-    }
 
-    Stack<Card> cards;
+    private ArrayList<Card> cards;
+    private Random rn;
+    /** number of jokers in a deck */
+    public static final int NUM_JOKERS = 2;
+    public static final int DECK_SIZE = 54;
 
     /**
      * Produce a regular 54-card deck.
      */
     public Deck() {
-        this.cards = new Stack<>();
+        this.cards = new ArrayList<>();
 
-        cards.push(new Card(Rank.JOKER, Suit.HEARTS));
-        cards.push(new Card(Rank.JOKER, Suit.SPADES));
+        cards.add(new Card(Rank.JOKER, Suit.HEARTS));
+        cards.add(new Card(Rank.JOKER, Suit.SPADES));
 
         // the first rank will be joker
         Rank[] ranks = Rank.values();
         for (Suit s : Suit.values()) {
             // skip 0 because we already populated Jokers
             for (int i = 1; i < ranks.length; i++) {
-                cards.push(new Card(ranks[i], s));
+                cards.add(new Card(ranks[i], s));
             }
         }
 
-        assert this.size() == 54;
+        if (cards.size() != DECK_SIZE) {
+            throw new AssertionError("Deck is not " + DECK_SIZE + " cards!");
+        }
+        rn = new Random();
     }
 
     /**
@@ -51,8 +52,8 @@ public class Deck {
      * 
      * @return the top card of this deck.
      */
-    public Card removeTopCard() {
-        return this.cards.pop();
+    public Card drawTopCard() {
+        return cards.remove(cards.size() - 1);
     }
 
     /**
@@ -61,16 +62,13 @@ public class Deck {
      * @param c the {@link Card} to be added
      */
     public void addCard(Card c) {
-        assert !this.cards.contains(c) : "duplicate card inserted!!";
-        this.cards.push(c);
+        this.cards.add(c);
     }
 
     /**
      * Perform a Durstenfeld's Fisher–Yates shuffle on this deck
      */
     public void shuffle() {
-        // https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle#The_modern_algorithm
-        Random rn = new Random();
         for (int i = this.cards.size() - 1; i >= 1; i--) {
             int j = rn.nextInt(0, i + 1);
 
@@ -82,16 +80,32 @@ public class Deck {
 
     @Override
     public String toString() {
-        String tmp = "";
+        StringBuilder bld = new StringBuilder();
 
         for (Card c : this.cards) {
-            assert c != null : "there shouldn't be any null cards in the deck";
-            tmp += c.toString() + "\n";
+            if (c == null) {
+                throw new AssertionError("there shouldn't be any null cards in the deck");
+            }
+            bld.append(c.toString() + "\n");
         }
 
-        // remove trailing '\n'
-        tmp = tmp.substring(0, tmp.length() - 1);
+        // there's a trailing '\n'
+        bld.deleteCharAt(bld.length() - 1);
 
-        return tmp;
+        return bld.toString();
+    }
+
+    public boolean isEmpty() {
+        return cards.isEmpty();
+    }
+
+    public boolean add(Card c) {
+        return cards.add(c);
+    }
+
+    public void add(Hand h) {
+        while (!h.isEmpty()) {
+            cards.add(h.remove(h.size() - 1));
+        }
     }
 }

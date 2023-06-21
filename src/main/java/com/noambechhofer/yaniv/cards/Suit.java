@@ -1,11 +1,11 @@
-package com.noambechhofer.yaniv;
+package com.noambechhofer.yaniv.cards;
 
 import java.awt.Color;
 
 /**
  * The suit of a Card
  */
-enum Suit {
+public enum Suit {
     CLUBS, DIAMONDS, HEARTS, SPADES;
 
     /**
